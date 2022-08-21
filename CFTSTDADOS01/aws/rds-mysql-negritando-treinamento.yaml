@@ -1,0 +1,97 @@
+#
+# pilha : cmj-rds-mysql
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template que cria uma instancia mysql. Autor Fernando Rodrigues
+Parameters:
+  DBInstanceID:
+    Default: dbnegritando
+    Description: Nome da instancia
+    Type: String
+    MinLength: '1'
+    MaxLength: '63'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: >-
+      Preciosa iniciar com letras e não deve terminar com um ou mais hifens
+  DBName:
+    Default: negritando
+    Description: Minha base de dados
+    Type: String
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: Deve comecar com uma letra e conter somente coracteres alfanumericos.
+  DBInstanceClass:
+    Default: db.t3.micro
+    Description: Classe da instancia DB
+    Type: String
+    ConstraintDescription: Selecione um tipo valido de instancia DB.
+  DBAllocatedStorage:
+    Default: '20'
+    Description: Tamanho da base de dados (GiB)
+    Type: Number
+    MinValue: '20'
+    MaxValue: '65536'
+    ConstraintDescription: Deve estar entre 20 e 65536 GiB.
+  DBUsername:
+    NoEcho: 'true'
+    Description: Nome do usuario para acessar a base de dados  MySQL.
+    Type: String
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: Deve comecar com uma letra e conter somente caracteres.
+  DBPassword:
+    NoEcho: 'true'
+    Description: Senha de acesso da base de dados MySQL.
+    Type: String
+    MinLength: '8'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: Deve conter somente caracteres.
+  VPC:
+    Type: AWS::EC2::VPC::Id
+  CidrPermitido:
+    Description: Informe o IP da sua estacao de trabalho para que somente ela tenha acesso ao servico.
+    Type: String
+    Default: 0.0.0.0/32          
+Resources:
+  CMJRDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Grupo de seguranca (Security group) do RDS.
+      GroupName: !Join ['', [!Ref DBInstanceID, SecurityGroup]]
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: !Ref CidrPermitido #exemplo 1111.2222.3333.4444/32 
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0
+  CMJRDSDBInstance:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      DBInstanceIdentifier: !Ref DBInstanceID
+      DBName: !Ref DBName
+      DBInstanceClass: !Ref DBInstanceClass
+      StorageType : 'gp2'
+      AllocatedStorage: !Ref DBAllocatedStorage
+      Engine: MySQL
+      EngineVersion: "8.0.28" 
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      MonitoringInterval: '0'
+      PubliclyAccessible : 'true'
+      VPCSecurityGroups : 
+        - !Ref CMJRDSSecurityGroup
+      BackupRetentionPeriod: '0'
+Outputs:
+  CMJRDSSecurityGroupOutputs:
+    Description: Seurity group do rds
+    Value: !Ref CMJRDSSecurityGroup
+    Export:
+      Name: CMJRDSSecurityGroupOut 
