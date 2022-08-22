@@ -29,3 +29,5 @@ Teremos visto todos estes serviços quando chegarmos na parte final (parte 3).
 
 ## Acessando o console AWS
 Para começar precisamos ter uma conta na AWS. Se você não tiver, recomendo criar uma, pois a AWS permite utilizar alguns serviços sem custo algum por 12 meses. Depois de criar uma conta você receberá as credenciais de acesso (usuário, senha, …) e poderá acessar o console da AWS. O painel de controle (dashboard) do console é a primeira ferramenta que nos é apresentada. Nele você tem acesso a informações como: conta, usuário logado, movimentos de cobrança (billing), algumas dicas pra iniciar, últimos serviços utilizados, alertas sobre indisponibilidade, informações sobre saúde dos serviços, etc.
+
+<img width="670" alt="Console AWS" src="https://user-images.githubusercontent.com/34346597/185965609-deb28a4b-5c7b-4f42-a2b3-7b2b0a4ad206.png">
