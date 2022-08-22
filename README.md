@@ -1,7 +1,7 @@
 Ola!
 Esta é uma coletânea de 3 artigos onde descrevo, em alto nível, como implantar uma solução de 3 camadas (data tier, business tier e UI tier).
 
-# [Implantando uma solução utilizando AWS e Docker (Parte 1 de 3, data tier)] (https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTDADOS01/artigo/readme.md)
+# [Implantando uma solução utilizando AWS e Docker (Parte 1 de 3, data tier)](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTDADOS01/artigo/readme.md)
 
 Vamos implantar uma base de dados **MySQL** utilizando o console do **AWS RDS** e ao final abordaremos **ClouFormation**.
 
