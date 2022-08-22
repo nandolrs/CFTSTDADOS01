@@ -11,4 +11,5 @@ Mas primeiro, precisamos construir um vocabulário pra entender a coisa toda e v
 
 A cloud da [AWS](https://aws.amazon.com/pt/) se organiza em regiões ([Regions](https://aws.amazon.com/pt/about-aws/global-infrastructure/regions_az/)) que são compostas por zonas de disponibilizade (AZ). Por exemplo: Brasil, Africa e Canadá possuem 1 região cada. América do norte possui 4 regiões. Europa possui 6 regiões. Asia possui 8 regiões. O nome da região do Brazil é **sa-east-1**. Alguns dos serviços disponibilizados são globais, ou seja, não estão limitados a uma região, como é o caso do **IAM** (Identity and Acess Management) utilizado para gerenciar acessos. Outros são limitados por região, como é o exemplo do **EC2**; isto significa que se você precisar de um servidor no Brasil deverá solicitá-lo na região sa-east-1 e assim sucessivamente. Outra palavrinha que precisamos é a VPC ([Virtual Private Cloud](https://docs.aws.amazon.com/pt_br/vpc/latest/userguide/what-is-amazon-vpc.html))  , ou seja,uma área segura onde os recursos são disponibilizados e as AZ se localizam, etc.
 
-![](../CFTSTDADOS01/CFTSTDADOS01/artigo/imagens/f00-vpc.png)
+
+![Abstração de uma VPC, Regions e AZ](https://user-images.githubusercontent.com/34346597/185959999-5f177b2e-4752-4978-b6e9-7901b3d574bb.png)
