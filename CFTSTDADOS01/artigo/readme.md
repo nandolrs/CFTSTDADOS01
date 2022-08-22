@@ -123,4 +123,6 @@ Espero que esta publicação tenha sido útil de alguma forma. Na próxima verem
 Muito Axé pra todo mundo.
 
 
+<img width="599" alt="aws-certified-developer-architect" src="https://user-images.githubusercontent.com/34346597/186031305-723d7cde-d9b7-4652-b7b2-c0ba750d474b.png">
+
 
