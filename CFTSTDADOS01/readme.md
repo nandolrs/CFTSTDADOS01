@@ -90,7 +90,7 @@ Não quero (e nem me atrevo) dar um treinamento de CloudFormation em poucas linh
     AllowedPattern: '[a-zA-Z0-9]*'
     ConstraintDescription: Deve conter somente caracteres.
 ```
-* Resource: é uma seção que tem como objetivo definir os recursos que serão criados durante a execução do template. Nela você encontra todos os recursos (e seus [tipos](https://docs.aws.amazon.com/pt_br/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)) que serão criados durante a execução do template.  No fragmento de código abaixo temos a definição de um recurso do tipo DBInstance, ou seja, uma instância DB do serviço RDS. Observe que no meio da definição você encontra o *DBPassword* fazendo referência ao parâmetro **DBPassword** que citamos no tópico de parâmetros acima. 
+* Resource: é uma seção que tem como objetivo definir os recursos que serão criados durante a execução do template. Nela você encontra todos os recursos (e seus [tipos](https://docs.aws.amazon.com/pt_br/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)) que serão criados durante a execução do template.  No fragmento de código abaixo temos a definição de um recurso do tipo DBInstance, ou seja, uma instância DB do serviço RDS. Observe que no meio da definição você encontra o atributo **MasterUserPassword**  fazendo referência ao parâmetro **DBPassword** que citamos no tópico de parâmetros acima. 
 
 ```
   CMJRDSDBInstance:
