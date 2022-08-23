@@ -157,8 +157,8 @@ Daqui pra frente não tem mais novidade. O serviço tá de pé, ou seja, temos u
 
 ## Considerações finais
 Espero que esta publicação tenha sido útil de alguma forma. Na próxima veremos como subir um container gerado com Docker onde teremos empacotado e pronto pra viagem a camada de negócio (business tier) da solução onde utilizamos .Net Core e C# exposta como API Web.
-Muito Axé pra todo mundo.
 
+Muito Axé pra todo mundo.
 
 <img width="599" alt="aws-certified-developer-architect" src="https://user-images.githubusercontent.com/34346597/186031305-723d7cde-d9b7-4652-b7b2-c0ba750d474b.png">
 
