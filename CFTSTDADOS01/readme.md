@@ -75,10 +75,9 @@ E depois? Como disseminar isto na organização? Para que todos utilizem, repliq
 
 Foi muito legal fazer isto pelo console do RDS, mas por favor, não faça isto. Existe uma forma muito melhor: [CloudFormaion](https://aws.amazon.com/pt/cloudformation/). Infraestrutura como código. A grosso modo significa codificar a infraestrutura (banco de dados, balanceadores de carga, etc). Utilizando modelos (templates), pilhas (stacks) e análises de impacto (change sets). Podendo ser aplicado  quando e onde (Region, AZ, Organização, etc) for necessário. Você codifica sua infraestrutura utilizando templates (texto em YAML e JSON), cria pilhas (stacks) informando o template a ser executado. Recebe verdadeiras análises de impacto (change sets) pois quando precisar alterar a infraestrutura/pilha  (stack)  a ferramenta lhe proporcionará uma visão dos eventos (inclusão,exclusão, etc) que todos os objetos deverão passar. Pode utilizar parâmetros, aplicar condições, fazer relações,  exportar objetos para serem reutilizados, etc. 
 
-Não quero dar um treinamento de CloudFormation, mas vamos ver uma pequena visão da estrutura:
 
 ### Seções do CloudFormation
-No template que colocamos neste artigo você vai encontrar 2 seções: **Parameters** e **Resources**. 
+Não quero (e nem me atrevo) dar um treinamento de CloudFormation em poucas linhas, só pra dar uma noção do tamanho do bicho existem cursos inteiros falando apenas de CloudFormation, mas vamos ver uma pequena visão da estrutura. No template que colocamos neste artigo você vai encontrar 2 seções: **[Parameters](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html)** e **[Resources](https://docs.aws.amazon.com/pt_br/AWSCloudFormation/latest/UserGuide/resources-section-structure.html)**. 
 * Parameters: é uma seção que tem como objetivo a reutilização do template. Nela você encontra todos os parâmetros necessários à execução do template.  Podemos utilizar este mesmo template para criar vários recursos na cloud com atributos diferentes. Esta marcação acaba gerando um campo em um formulário para que possa ser informado. No fragmento de código abaixo temos a definição de um parâmetro (e seus atributos) que recebe a senha a ser utilizada na criação do recurso. Com isto podemos gerar recursos com senhas diferentes sempre utilizando o mesmo template.
 
 ```
@@ -91,7 +90,7 @@ No template que colocamos neste artigo você vai encontrar 2 seções: **Paramet
     AllowedPattern: '[a-zA-Z0-9]*'
     ConstraintDescription: Deve conter somente caracteres.
 ```
-* Resource: é uma seção que tem como objetivo definir os recursos que serão criados durante a execução do template. Nela você encontra todos os recursos (e seus tipos) que serão criados durante a execução do template. No fragmento de código abaixo temos a definição de um recurso do tipo DBInstance, ou seja, uma instância DB do serviço RDS. Observe que no meio da definição você encontra o *DBPassword* fazendo referência ao parâmetro **DBPassword** que citamos no tópico de parâmetros acima. 
+* Resource: é uma seção que tem como objetivo definir os recursos que serão criados durante a execução do template. Nela você encontra todos os recursos (e seus [tipos](https://docs.aws.amazon.com/pt_br/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)) que serão criados durante a execução do template.  No fragmento de código abaixo temos a definição de um recurso do tipo DBInstance, ou seja, uma instância DB do serviço RDS. Observe que no meio da definição você encontra o *DBPassword* fazendo referência ao parâmetro **DBPassword** que citamos no tópico de parâmetros acima. 
 
 ```
   CMJRDSDBInstance:
