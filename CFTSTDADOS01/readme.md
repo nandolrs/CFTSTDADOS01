@@ -1,6 +1,5 @@
 # Implantando uma solução utilizando AWS e Docker (Parte 1 de 3, data tier)
 
-
 Alguns dizem que o mundo ideal é aquele em que não existem problemas. Eu acredito que o mundo ideal é aquele em que as palavras: problema e solução, estão na mesma frase e o tempo a favor dos atores. Não adianta resolver o problema da fome mundial depois que todos morreram desnutridos. Ter a solução no momento errado é o mesmo que nada ter. Não basta mover-se, mas é vital mover-se rapidamente e/ou no momento certo.
 
 Vamos juntos dar uma olhada, alto nível ou seja meio de longe ignorando os detalhes, em como implantar uma solução baseada em multi-camadas (front, back e data) de uma forma rápida, altamente disponível e tolerante à falhas.
@@ -160,6 +159,8 @@ Espero que esta publicação tenha sido útil de alguma forma. Na próxima verem
 
 Muito Axé pra todo mundo.
 
-<img width="599" alt="aws-certified-developer-architect" src="https://user-images.githubusercontent.com/34346597/186031305-723d7cde-d9b7-4652-b7b2-c0ba750d474b.png">
 
+Voltar ao [artigo mãe](https://github.com/nandolrs/CFTSTDADOS01) 
+
+<img width="599" alt="aws-certified-developer-architect" src="https://user-images.githubusercontent.com/34346597/186031305-723d7cde-d9b7-4652-b7b2-c0ba750d474b.png">
 
