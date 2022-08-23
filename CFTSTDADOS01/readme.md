@@ -91,7 +91,7 @@ No template que colocamos neste artigo você vai encontrar 2 seções: **Paramet
     AllowedPattern: '[a-zA-Z0-9]*'
     ConstraintDescription: Deve conter somente caracteres.
 ```
-* Resource: é uma seção que tem como objetivo definir o tipo do recursos que serão criados durante a execução do template. Nela você encontra todos os recursos que serão criados durante a execução do template.
+* Resource: é uma seção que tem como objetivo definir os recursos que serão criados durante a execução do template. Nela você encontra todos os recursos (e seus tipos) que serão criados durante a execução do template. No fragmento de código abaixo temos a definição de um recurso do tipo DBInstance, ou seja, uma instância DB do serviço RDS. Observe que no meio da definição você encontra o *DBPassword* fazendo referência ao parâmetro **DBPassword** que citamos no tópico de parâmetros acima. 
 
 ```
   CMJRDSDBInstance:
