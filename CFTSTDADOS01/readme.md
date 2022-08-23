@@ -23,7 +23,7 @@ A solução que vamos subir/implantar (deploy) utiliza basicamente 3 camadas: da
 
 * Route 53: disponibiliza servidores DNS, registros de domínio, etc.
 
-* CloudFormation: o pulo-do-gato, permite criar infraestrutura utilizando código através de modelos (templates).
+* CloudFormation: o pulo-do-gato, permite criar infraestrutura utilizando código através de modelos (templates) e pilhas (stacks).
 
 Teremos visto todos estes serviços quando chegarmos na parte final (parte 3).
 
@@ -73,8 +73,46 @@ Replicar não atende? Não vamos jogar tudo fora. Vamos pegar o que deu certo ne
 
 E depois? Como disseminar isto na organização? Para que todos utilizem, repliquem quando for necessário, de uma forma rápida e intolerante à interpretações equivocadas?
 
-Foi muito legal fazer isto pelo console do RDS, mas por favor, não faça isto. Existe uma forma muito melhor: [CloudFormaion](https://aws.amazon.com/pt/cloudformation/). Infraestrutura como código. A grosso modo significa codificar a infraestrutura (banco de dados, balanceadores de carga, etc), utilizar pilhas (stacks), métodos (pipelines) e aplicar quando e onde (Region, AZ, Organização, etc) for necessário. Você codifica sua infraestrutura utilizando templates em YAML e JSON. Pode utilizar parâmetros, aplicar condições, fazer relações, pode exportar objetos para serem reutilizados, etc.
+Foi muito legal fazer isto pelo console do RDS, mas por favor, não faça isto. Existe uma forma muito melhor: [CloudFormaion](https://aws.amazon.com/pt/cloudformation/). Infraestrutura como código. A grosso modo significa codificar a infraestrutura (banco de dados, balanceadores de carga, etc). Utilizando modelos (templates), pilhas (stacks) e análises de impacto (change sets). Podendo ser aplicado  quando e onde (Region, AZ, Organização, etc) for necessário. Você codifica sua infraestrutura utilizando templates (texto em YAML e JSON), cria pilhas (stacks) informando o template a ser executado. Recebe verdadeiras análises de impacto (change sets) pois quando precisar alterar a infraestrutura/pilha  (stack)  a ferramenta lhe proporcionará uma visão dos eventos (inclusão,exclusão, etc) que todos os objetos deverão passar. Pode utilizar parâmetros, aplicar condições, fazer relações,  exportar objetos para serem reutilizados, etc. 
 
+Não quero dar um treinamento de CloudFormation, mas vamos ver uma pequena visão da estrutura:
+
+### Seções do CloudFormation
+No template que colocamos neste artigo você vai encontrar 2 seções: **Parameters** e **Resources**. 
+* Parameters: é uma seção que tem como objetivo a reutilização do template. Nela você encontra todos os parâmetros necessários à execução do template.  Podemos utilizar este mesmo template para criar vários recursos na cloud com atributos diferentes. Esta marcação acaba gerando um campo em um formulário para que possa ser informado. No fragmento de código abaixo temos a definição de um parâmetro (e seus atributos) que recebe a senha a ser utilizada na criação do recurso. Com isto podemos gerar recursos com senhas diferentes sempre utilizando o mesmo template.
+
+```
+  DBPassword:
+    NoEcho: 'true'
+    Description: Senha de acesso da base de dados MySQL.
+    Type: String
+    MinLength: '8'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]*'
+    ConstraintDescription: Deve conter somente caracteres.
+```
+* Resource: é uma seção que tem como objetivo definir o tipo do recursos que serão criados durante a execução do template. Nela você encontra todos os recursos que serão criados durante a execução do template.
+
+```
+  CMJRDSDBInstance:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+      MasterUserPassword: !Ref DBPassword
+      DBInstanceIdentifier: !Ref DBInstanceID
+      DBName: !Ref DBName
+      DBInstanceClass: !Ref DBInstanceClass
+      StorageType : 'gp2'
+      AllocatedStorage: !Ref DBAllocatedStorage
+      Engine: MySQL
+      EngineVersion: "8.0.28" 
+      MasterUsername: !Ref DBUsername
+      MonitoringInterval: '0'
+      PubliclyAccessible : 'true'
+      VPCSecurityGroups : 
+        - !Ref CMJRDSSecurityGroup
+      BackupRetentionPeriod: '0'
+
+```
 ## Provisionando MySQL (RDS)
 Primeiro vamos desfazer tudo. Vou excluir a instância MySQL utilizando o console.
 
