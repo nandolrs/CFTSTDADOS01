@@ -1,6 +1,6 @@
 # Implantando uma solução utilizando Cloud e Container ( AWS + Docker ) 
 
-Esta é uma solução com 3 projetos onde descrevo, em alto nível, como implantar uma solução de 3 camadas (data tier, business tier e UI tier) utlizando MySQL, API em dot Net Core e React.
+Esta é uma solução com 3 projetos onde descrevo, em alto nível, como implantar uma solução de 3 camadas (data tier, business tier e UI tier) utilizando MySQL, API em dot Net Core e React.
 
 # [Implantando uma solução utilizando Cloud e Container ( AWS + Docker ) (Parte 1 de 3, data tier)](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01)
 
