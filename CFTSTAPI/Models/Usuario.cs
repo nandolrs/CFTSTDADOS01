@@ -1,6 +1,12 @@
 ﻿namespace Negritando.Web.Models
 {
-    public class Usuario
+    public class Entidade
+    {
+        long codigo;
+
+        public long Codigo { get => codigo; set => codigo = value; }
+    }
+    public class Usuario : Entidade
     {
         string email;
         string nome;

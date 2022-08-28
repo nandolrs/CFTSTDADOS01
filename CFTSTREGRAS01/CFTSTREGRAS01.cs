@@ -25,5 +25,44 @@ namespace Negritando.Rule
 
             entidade.incluir();
         }
+
+        public Negritando.Model.Usuario Consultar(Negritando.Model.Usuario entidade)
+        {
+
+
+            if (entidade.codigo == 0)
+            {
+                throw new Exception("informe o código.");
+            }
+
+            entidade.consultar();
+
+            return entidade;
+        }
+
+
+        public Negritando.Model.Usuario Pesquisar(Negritando.Model.Usuario entidade)
+        {
+            if (entidade.codigo == 0 && entidade.Nome.Length == 0)
+            {
+                throw new Exception("informe ao menos um dos atributos");
+            }
+
+            entidade.pesquisar();
+
+            return entidade;
+        }
+
+        public void Excluir(Negritando.Model.Usuario entidade)
+        {
+            if (entidade.codigo == 0)
+            {
+                throw new Exception("informe o código.");
+            }
+
+            entidade.excluir();
+
+        }
+
     }
 }
