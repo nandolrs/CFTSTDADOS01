@@ -30,7 +30,7 @@ namespace Negritando.Rule
         {
 
 
-            if (entidade.codigo == 0)
+            if (entidade.codigo <= 0)
             {
                 throw new Exception("informe o código.");
             }
