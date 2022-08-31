@@ -34,7 +34,16 @@ Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. 
 
 ## Empacotando tudo utilizando container
 
-Depois de implementado precisamos empacotar esta camada para ser distribuida. É aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada. Aqui em baixo tem um fragmento do Dockerfile.
+Depois de implementar os projetos  precisamos empacotar tudo para serem distribuídos como uma solução única. Se montarmos uma árvore de dependência ela ficaria assim:
+
+```
+CFTSTAPI => CFTSTREGRAS01 => CFTSTDADOS01
+```
+
+Demos ler da seguinte forma: CFTSTAPI {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
+
+
+Despois de implementado e testado é aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Aqui em baixo tem um fragmento do Dockerfile.
 
 ```
 #------------------------------------------------------------
