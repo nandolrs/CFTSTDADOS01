@@ -48,8 +48,8 @@ COPY CFTSTREGRAS01/*.csproj			        ./CFTSTREGRAS01/
 RUN dotnet restore
 
 # copy everything else and build app
-COPY CFTSTDADOS01/.					       ./CFTSTDADOS01/        
-COPY CFTSTREGRAS01/.      				   ./CFTSTREGRAS01/      
+COPY CFTSTDADOS01/.      			        ./CFTSTDADOS01/        
+COPY CFTSTREGRAS01/.      			        ./CFTSTREGRAS01/      
 
 WORKDIR /app/CFTSTREGRAS01
 RUN dotnet publish CFTSTREGRAS01.csproj -c Release -o out /restore
