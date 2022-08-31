@@ -20,11 +20,16 @@ Diante disto decidimos utilizar **MVC** (Model View Controller) , framework **.N
 
 ## Abstraindo a camada de dados
 
-Utilizamos uma pacote do [NuGet](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) chamado [CFCOREDADOSBASE](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) para abstrair a camada de dados. Ele implementa uma interface expondo os métodos que permitem a manutenção (Incluir, Alterar, Consultar, Pesquisar e Excluir) da entidade. 
+Utilizamos uma pacote do [NuGet](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) chamado [CFCOREDADOSBASE](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) para abstrair a camada de dados. Ele implementa uma interface expondo os métodos que permitem a manutenção (Incluir, Alterar, Consultar, Pesquisar e Excluir) da entidade. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01); 
 
 ## Implementando as regras de negócio
 
-Tudo foi exposto como API (Application Programming Interface). Os fontes desta implementação você encontra no [git](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTREGRAS01). 
+Implementamos um projeto CFTSTREGRAS01 e colocamos as regras levantadas em tempo de análise do sistema.
+Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTREGRAS01). 
+
+## Implementando a API
+
+Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. Para a manutenção da entidade implementamos um serviço expondo os verbos:POST, UPDATE, GET,GET e DELETE; respetivamente para incluir, atualizar, consultar, pesquisar e excluir. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI). 
 
 
 ## Empacotando tudo utilizando container
@@ -32,9 +37,9 @@ Tudo foi exposto como API (Application Programming Interface). Os fontes desta i
 Depois de implementado precisamos empacotar esta camada para ser distribuida. É aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada. Aqui em baixo tem um fragmento do Dockerfile.
 
 ```
-#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------
 # .net 
-#------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
@@ -44,22 +49,24 @@ WORKDIR /app
 COPY *.sln .
 COPY CFTSTDADOS01/*.csproj      			./CFTSTDADOS01/      
 COPY CFTSTREGRAS01/*.csproj			        ./CFTSTREGRAS01/        
+COPY CFTSTAPI/*.csproj			            ./CFTSTAPI/        
 
 RUN dotnet restore
 
 # copy everything else and build app
 COPY CFTSTDADOS01/.      			        ./CFTSTDADOS01/        
 COPY CFTSTREGRAS01/.      			        ./CFTSTREGRAS01/      
+COPY CFTSTAPI/.      			            ./CFTSTAPI/      
 
-WORKDIR /app/CFTSTREGRAS01
-RUN dotnet publish CFTSTREGRAS01.csproj -c Release -o out /restore
+WORKDIR /app/CFTSTAPI
+RUN dotnet publish CFTSTAPI.csproj -c Release -o out /restore
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 
 WORKDIR /app
 
-COPY --from=build /app/CFTSTREGRAS01/out ./
-ENTRYPOINT ["dotnet", "CFTSTREGRAS01.dll"]
+COPY --from=build /app/CFTSTAPI/out ./
+ENTRYPOINT ["dotnet", "V.dll"]
 
 ```
 
