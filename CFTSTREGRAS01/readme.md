@@ -31,7 +31,7 @@ Tudo foi exposto como API (Application Programming Interface). Os fontes desta i
 
 Depois de implementado precisamos empacotar esta camada para ser distribuida. É aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada. Aqui em baixo tem um fragmento do Dockerfile.
 
-`
+```
 #------------------------------------------------------------------------------------------------------------
 # .net 
 #------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ WORKDIR /app
 COPY --from=build /app/CFTSTREGRAS01/out ./
 ENTRYPOINT ["dotnet", "CFTSTREGRAS01.dll"]
 
-`
+```
 
  subir os componentes responsáveis pelo CRUD das tabelas modeladas.
 
