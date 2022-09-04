@@ -18,7 +18,7 @@ Parameters:
     Default: cmjApi  
   ServiceImage:
     Type: String
-    Default: nandolrs/cfcorewapicmj-image    
+    Default: nandolrs/cftstapi-image    
     # update with the name of the service
   VPC:
     Type: AWS::EC2::VPC::Id
@@ -59,7 +59,7 @@ Parameters:
   CMJCertificateArn:
     Type: String
     Default: arn:aws:acm:sa-east-1:105254198021:certificate/703972f3-0eb8-4205-a33b-20baa936d252
-    Description : Input the ARN SSL/TSL certificate
+    Description : Informar o ARN SSL/TSL do certificado
     # update with the ARN of certificate
 Conditions:
   CMJCertificateUsageQuestionCondition: !Equals
@@ -185,11 +185,11 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       LoadBalancerAttributes:
-        # this is the default, but is specified here in case it needs to be changed
+        # este e o padrao, porem especifique aqui se precisar mudar
         - Key: idle_timeout.timeout_seconds
           Value: 60
       Name: !Join ['', [!Ref ServiceName, LoadBalancer]]
-      # "internal" is also an option
+      # "internal" tambem e uma opcao
       Scheme: internet-facing
       SecurityGroups:
         - !Ref LoadBalancerSecurityGroup
@@ -201,7 +201,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       HealthCheckIntervalSeconds: 10
-      # will look for a 200 status code by default unless specified otherwise
+      # espera pelo codigo de status  200 por padrao, a menos que especifique outro
       HealthCheckPath: !Ref ServiceHealth
       HealthCheckTimeoutSeconds: 5
       UnhealthyThresholdCount: 2
@@ -211,7 +211,7 @@ Resources:
       Protocol: HTTP
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
-          Value: 60 # default is 300
+          Value: 60 # padrao e 300
       TargetType: ip
       VpcId: !Ref VPC
   ListenerHTTPS:
@@ -241,7 +241,7 @@ Resources:
           Image: !Ref ServiceImage
           PortMappings:
             - ContainerPort: !Ref ContainerPort
-          # Send logs to CloudWatch Logs
+          # envia os logs ao CloudWatch 
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -304,6 +304,3 @@ Outputs:
     Value: !Ref CMJECSIamRoleEcsTasksExecution
     Export:
       Name: CMJECSIamRoleEcsTasksExecutionOut          
-
-
-                         
