@@ -43,7 +43,10 @@ CFTSTAPI => CFTSTREGRAS01 => CFTSTDADOS01
 Devemos ler da seguinte forma: CFTSTAPI {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
 
 
-Depois de implementado e testado é aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Aqui em baixo tem um fragmento do Dockerfile utilizado. O arquivo você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI/Dockerfile)
+Depois de implementado e testado é aqui que entra o container. Vamos gerar e subir a imagem desta camada utilizando o [Docker desktop](https://www.docker.com/). Eu to usando como IDE o Visual Studio 2022 que vem com ferramentas pra facilitar o uso de Docker. Mas vamos utilizar o _CLI_ (Command Line Interface) do _**Docker desktop**_ que você deve baixar e instalar.
+
+O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Em resumo no Dockerfile você encontra instruções que vão: copiar e compilar os fontes necessários. Aqui em baixo coloquei conteúdo do arquivo Dockerfile utilizado. O arquivo você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI/Dockerfile).
+
 
 ```
 #------------------------------------------------------------
