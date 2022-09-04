@@ -16,11 +16,11 @@
 
 * **Excluir**:  é obrigatória a informação de um código positivo  e MAIOR QUE 0 (zero).
 
-Diante disto decidimos utilizar **MVC** (Model View Controller) , framework **.Net**  e como linguagem de programação **C#**. A tecnologia de container foi o **Docker**. 
+Diante disto decidimos utilizar **MVC** (Model View Controller) , framework **.Net**  e como linguagem de programação **C#**. A tecnologia de container foi o [Docker](https://www.docker.com/). 
 
 ## Abstraindo a camada de dados
 
-Utilizamos uma pacote do [NuGet](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) chamado [CFCOREDADOSBASE](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) para abstrair a camada de dados. Ele implementa uma interface expondo os métodos que permitem a manutenção (Incluir, Alterar, Consultar, Pesquisar e Excluir) da entidade. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01); 
+Utilizamos uma pacote do [NuGet](https://www.nuget.org/) chamado [CFCOREDADOSBASE](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) para abstrair a camada de dados. Ele implementa uma interface expondo os métodos que permitem a manutenção (Incluir, Alterar, Consultar, Pesquisar e Excluir) da entidade. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01); 
 
 ## Implementando as regras de negócio
 
@@ -29,7 +29,7 @@ Os fontes desta implementação você encontra no [github](https://github.com/na
 
 ## Implementando a API
 
-Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. Para a manutenção da entidade implementamos um serviço expondo os verbos:POST, UPDATE, GET,GET e DELETE; respetivamente para incluir, atualizar, consultar, pesquisar e excluir. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI). 
+Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. Para a manutenção da entidade implementamos um serviço expondo os verbos:POST, UPDATE, GET,GET e DELETE; respectivamente para incluir, atualizar, consultar, pesquisar e excluir. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI). 
 
 
 ## Empacotando tudo utilizando container
@@ -40,10 +40,10 @@ Depois de implementar os projetos  precisamos empacotar tudo para serem distribu
 CFTSTAPI => CFTSTREGRAS01 => CFTSTDADOS01
 ```
 
-Demos ler da seguinte forma: CFTSTAPI {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
+Devemos ler da seguinte forma: CFTSTAPI {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
 
 
-Despois de implementado e testado é aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Aqui em baixo tem um fragmento do Dockerfile.
+Depois de implementado e testado é aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Aqui em baixo tem um fragmento do Dockerfile utilizado.
 
 ```
 #------------------------------------------------------------
@@ -75,11 +75,36 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 WORKDIR /app
 
 COPY --from=build /app/CFTSTAPI/out ./
-ENTRYPOINT ["dotnet", "V.dll"]
+ENTRYPOINT ["dotnet", "CFTSTAPI.dll"]
 
 ```
 
- subir os componentes responsáveis pelo CRUD das tabelas modeladas.
+Para gerar a imagem podemos utilizar o CLI do Docker executando o comando docker build conforme abaixo:
+
+```
+docker build -f CFTSTAPI\Dockerfile -t cftst-image .
+
+```
+
+Para adicionar uma tag à imagem podemos utilizar o CLI do Docker executando o comando docker tag conforme abaixo:
+
+```
+docker tag cftst-image nandolrs/cftst-image
+```
+
+Para subir a imagem para o Docker Hub podemos utilizar o CLI do Docker executando o comando docker push conforme abaixo:
+
+```
+docker image push nandolrs/cftst-image
+```
+
+## Implantando o container na Cloud AWS com CloudFormation
+
+Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Não vamos utilizar o console web mas sim novamente lançaremos mão do CloudFormation. Você encontra o template do CloudFormation no [github]()
+
+Depois de gerar a imagem utilizando Dockerfile podemos enviar para o repositório do [Docker Hub](https://hub.docker.com/) onde posteriormente vamos utilizá-lo como origem para enviar ao serviço AWS ECS que é responsável pela orquestração de containers.
+
+
 
 
 

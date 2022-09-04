@@ -1,22 +1,30 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
+#------------------------------------------------------------------------------------------------------------
+# .net 
+#------------------------------------------------------------------------------------------------------------
 
-FROM mcr.microsoft.com/dotnet/aspnet:3.1 AS base
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:3.1 AS build
-WORKDIR /src
-COPY ["CFTSTAPI/CFTSTAPI.csproj", "CFTSTAPI/"]
-RUN dotnet restore "CFTSTAPI/CFTSTAPI.csproj"
-COPY . .
-WORKDIR "/src/CFTSTAPI"
-RUN dotnet build "CFTSTAPI.csproj" -c Release -o /app/build
+# copy csproj and restore as distinct layers
+COPY *.sln .
+COPY CFTSTAPI/*.csproj					       ./CFTSTAPI/        
+COPY CFTSTREGRAS01/*.csproj      			   ./CFTSTREGRAS01/      
+COPY CFTSTDADOS01/*.csproj  				   ./CFTSTDADOS01/  
 
-FROM build AS publish
-RUN dotnet publish "CFTSTAPI.csproj" -c Release -o /app/publish
+RUN dotnet restore
 
-FROM base AS final
+# copy everything else and build app
+COPY CFTSTAPI/.					       ./CFTSTAPI/        
+COPY CFTSTREGRAS01/.      			   ./CFTSTREGRAS01/      
+COPY CFTSTDADOS01/.  				   ./CFTSTDADOS01/  
+
+WORKDIR /app/CFTSTAPI
+RUN dotnet publish CFTSTAPI01.csproj -c Release -o out /restore
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
+
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+COPY --from=build /app/CFTSTAPI/out ./
 ENTRYPOINT ["dotnet", "CFTSTAPI.dll"]
