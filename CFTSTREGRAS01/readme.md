@@ -82,29 +82,24 @@ ENTRYPOINT ["dotnet", "CFTSTAPI.dll"]
 Para gerar a imagem podemos utilizar o CLI do Docker executando o comando docker build conforme abaixo:
 
 ```
-docker build -f CFTSTAPI\Dockerfile -t cftst-image .
+docker build -f CFTSTAPI\Dockerfile -t cftstapi-image .
 
 ```
 
 Para adicionar uma tag à imagem podemos utilizar o CLI do Docker executando o comando docker tag conforme abaixo:
 
 ```
-docker tag cftst-image nandolrs/cftst-image
+docker tag cftst-image nandolrs/cftstapi-image
 ```
 
 Para subir a imagem para o Docker Hub podemos utilizar o CLI do Docker executando o comando docker push conforme abaixo:
 
 ```
-docker image push nandolrs/cftst-image
+docker image push nandolrs/cftstapi-image
 ```
 
 ## Implantando o container na Cloud AWS com CloudFormation
 
 Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Não vamos utilizar o console web mas sim novamente lançaremos mão do CloudFormation. Você encontra o template do CloudFormation no [github]()
-
-Depois de gerar a imagem utilizando Dockerfile podemos enviar para o repositório do [Docker Hub](https://hub.docker.com/) onde posteriormente vamos utilizá-lo como origem para enviar ao serviço AWS ECS que é responsável pela orquestração de containers.
-
-
-
 
 
