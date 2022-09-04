@@ -94,7 +94,7 @@ docker tag cftst-image nandolrs/cftstapi-image
 ```
 <img width="631" alt="f24-docker-tag" src="https://user-images.githubusercontent.com/34346597/188293499-b9a21e12-4e6f-42ca-855a-83b1bcc8a4f1.png">
 
-Para subir a imagem para o Docker Hub podemos utilizar o CLI do Docker executando o comando _push_ conforme abaixo:
+Para subir a imagem para o Docker Hub podemos utilizar o CLI do Docker executando o comando _push_ conforme abaixo (a imagem você encontra no [hub.docker](https://hub.docker.com/repository/docker/nandolrs/cftstapi-image)):
 
 ```
 docker image push nandolrs/cftstapi-image
