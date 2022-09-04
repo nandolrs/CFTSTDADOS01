@@ -85,24 +85,21 @@ Para gerar a imagem podemos utilizar o CLI do Docker executando o comando docker
 docker build -f CFTSTAPI\Dockerfile -t cftstapi-image .
 
 ```
-
-<img width="914" alt="f22-docker-build" src="https://user-images.githubusercontent.com/34346597/188293197-f7c983c7-1080-411c-b17f-4ca0627e98a7.png">
-<img width="918" alt="f23-docker-build" src="https://user-images.githubusercontent.com/34346597/188293209-7f913cb0-efa0-4d16-8d24-a1cbafbeb858.png">
+<img width="913" alt="f22-docker-build" src="https://user-images.githubusercontent.com/34346597/188293490-79843bdc-c952-4e17-937d-40feb4f04922.png">
 
 Para adicionar uma tag à imagem podemos utilizar o CLI do Docker executando o comando docker tag conforme abaixo:
 
 ```
 docker tag cftst-image nandolrs/cftstapi-image
 ```
-
-<img width="582" alt="f24-docker-tag" src="https://user-images.githubusercontent.com/34346597/188293215-f9e56ea3-35c8-4446-a5a8-cbbcd2552d4f.png">
+<img width="631" alt="f24-docker-tag" src="https://user-images.githubusercontent.com/34346597/188293499-b9a21e12-4e6f-42ca-855a-83b1bcc8a4f1.png">
 
 Para subir a imagem para o Docker Hub podemos utilizar o CLI do Docker executando o comando docker push conforme abaixo:
 
 ```
 docker image push nandolrs/cftstapi-image
 ```
-<img width="563" alt="f25-docker-push" src="https://user-images.githubusercontent.com/34346597/188293220-6a8f3567-43b8-4d59-8f2c-d7e77cd8af1e.png">
+<img width="573" alt="f25-docker-push" src="https://user-images.githubusercontent.com/34346597/188293507-5d36839f-5d3c-42d8-aace-59b95dc343f7.png">
 
 ## Implantando o container na Cloud AWS com CloudFormation
 
