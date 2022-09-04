@@ -103,6 +103,8 @@ docker image push nandolrs/cftstapi-image
 
 <img width="635" alt="f26-docker-hub-imagem" src="https://user-images.githubusercontent.com/34346597/188294574-54174e04-1e40-41df-b03d-592307b62bf5.png">
 
+<img width="951" alt="f27-docker-hub-imagem" src="https://user-images.githubusercontent.com/34346597/188294772-71fed808-5e23-4fec-b3f3-e59d47e710f6.png">
+
 ## Implantando o container na Cloud AWS com CloudFormation
 
 Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Não vamos utilizar o console web mas sim novamente lançaremos mão do CloudFormation. Você encontra o template do CloudFormation no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI/aws/ecs-dotNet-negritando-treinamento.yaml).
