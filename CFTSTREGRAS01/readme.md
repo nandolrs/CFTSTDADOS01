@@ -43,7 +43,7 @@ CFTSTAPI => CFTSTREGRAS01 => CFTSTDADOS01
 Devemos ler da seguinte forma: CFTSTAPI {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
 
 
-Depois de implementado e testado é aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Aqui em baixo tem um fragmento do Dockerfile utilizado.
+Depois de implementado e testado é aqui que entra o container. O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Aqui em baixo tem um fragmento do Dockerfile utilizado. O arquivo você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI/Dockerfile)
 
 ```
 #------------------------------------------------------------
@@ -79,7 +79,7 @@ ENTRYPOINT ["dotnet", "CFTSTAPI.dll"]
 
 ```
 
-Para gerar a imagem podemos utilizar o CLI do Docker executando o comando docker build conforme abaixo:
+Para gerar a imagem podemos utilizar o CLI do Docker executando o comando _build_ conforme abaixo:
 
 ```
 docker build -f CFTSTAPI\Dockerfile -t cftstapi-image .
@@ -87,14 +87,14 @@ docker build -f CFTSTAPI\Dockerfile -t cftstapi-image .
 ```
 <img width="913" alt="f22-docker-build" src="https://user-images.githubusercontent.com/34346597/188293490-79843bdc-c952-4e17-937d-40feb4f04922.png">
 
-Para adicionar uma tag à imagem podemos utilizar o CLI do Docker executando o comando docker tag conforme abaixo:
+Para adicionar uma tag à imagem podemos utilizar o CLI do Docker executando o comando _tag_ conforme abaixo:
 
 ```
 docker tag cftst-image nandolrs/cftstapi-image
 ```
 <img width="631" alt="f24-docker-tag" src="https://user-images.githubusercontent.com/34346597/188293499-b9a21e12-4e6f-42ca-855a-83b1bcc8a4f1.png">
 
-Para subir a imagem para o Docker Hub podemos utilizar o CLI do Docker executando o comando docker push conforme abaixo:
+Para subir a imagem para o Docker Hub podemos utilizar o CLI do Docker executando o comando _push_ conforme abaixo:
 
 ```
 docker image push nandolrs/cftstapi-image
