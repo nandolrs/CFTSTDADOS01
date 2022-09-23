@@ -14,7 +14,9 @@
 
 * **Pesquisar**: é obrigatória a informação de ao menos um dos atributos a serem utilizados como critério de busca;
 
-* **Excluir**:  é obrigatória a informação de um código positivo  e MAIOR QUE 0 (zero).
+ * **Autenticar**: é obrigatória a informação dos atributos: email e senha;
+
+ * **Autorizar**: é obrigatória a informação do método desejado e token de segurança válido;
 
 Diante disto decidimos utilizar **MVC** (Model View Controller) , framework **.Net**  e como linguagem de programação **C#**. A tecnologia de container foi o [Docker](https://www.docker.com/). 
 
