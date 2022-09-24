@@ -117,7 +117,9 @@ Agora que temos a imagem no Docker Hub podemos implantar o container na cloud ut
 
 
 ## CloudFormation (o pulo-do-gato)
-Não vou contar novamente aquela estória de uma pequena organização local que cresceu e precisou de uma nova estrutura e serviços. Já contei na publicação anterior que trata do data tier que você encontra [aqui](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01). Mas podemos ir direto a uma breve explicação sobre as seções do CloudFormation.
+Não vou contar novamente aquela estória de uma pequena organização local que cresceu e precisou de uma nova estrutura e serviços. Já contei na publicação anterior que trata do data tier que você encontra [aqui](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01). 
+Mas sempre vale lembrar que esta publicação é de alto nível (meio distante), justamente porque nesta publicação você encontra os templates do CloudFormation utilizados. A força do CloudFormation é justamente documentar os detalhes que realmente foram utilizados.
+Mas podemos ir direto a uma breve explicação sobre as seções do CloudFormation.
 
 ### Seções do CloudFormation
 Não vou voltar às definições de parâmetros e recursos, pois isto já foi abordado na publicação anterior. 
@@ -130,7 +132,7 @@ Não vou voltar às definições de parâmetros e recursos, pois isto já foi ab
 
  **ServiceHealth**:  para tornar o template reutilizável adicionei este parâmetro. Isto vai possibilitar que o caminho a ser utilizado para determinar a saúde do serviço seja configurável em tempo de execução. Ele será utilizado para configurar o recurso **target group** onde você utilizará para definir o caminho a ser utilizado para verificar a saúde do serviço. Isto é muito legal porque entramos no âmbito da disponibilidade, ou seja, uma solicitação não pode ser entregue a um serviço doente ou indisponível.
 
- Abaixo deixei um fragmento do arquivo Dockerfile utilizado com a definição dos parâmetros.
+ Abaixo deixei um fragmento do arquivo Dockerfile utilizado com a definição de alguns parâmetros.
 ```
 Parameters:
   ServiceName:
@@ -150,9 +152,11 @@ Parameters:
 ```
 * Resource: Aqui a baixo eu deixei alguns recursos que julgo interessante destacar. Se você ler  a documentação do serviço AWS ECS vai ver que existem, entre outros, 2 recursos que devem ser definidos: TaskDefinition (tarefa) e TargetGroup.
 
-O **TaskDefinition** você utilizará para definir vários atributos: memória, cpu,  definições de container, log, etc. Observe os parâmetros **ServiceName** e **ServiceImage** citados acima entre os atributos e utilizados a baixo no recurso.
+O [**TaskDefinition**](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html) você utilizará para definir vários atributos: memória, cpu,  definições de container, log, etc. Observe os parâmetros **ServiceName** e **ServiceImage** citados acima entre os atributos e utilizados a baixo no recurso.
 
-O **TargetGroup** você utilizará para definir vários atributos:o nome do recurso, a porta do container, intervalos de verificação de saúde, o caminho a ser utilizado na verificação de saúde, a quantidade de verificações de saúde a serem realizadas antes de considerar o serviço doente ou indisponível, etc. Observe o parâmetro **ContainerPort** citado acima entre os atributos utilizados a baixo no recurso.
+O [**TargetGroup**](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html) você utilizará para definir vários atributos: o nome do recurso, a porta do container, intervalos de verificação de saúde, o caminho a ser utilizado na verificação de saúde, a quantidade de verificações de saúde a serem realizadas antes de considerar o serviço doente ou indisponível, etc. Observe o parâmetro **ContainerPort** citado acima entre os atributos utilizados a baixo no recurso.
+
+Abaixo deixei um fragmento do arquivo Dockerfile utilizado com a definição de alguns recursos.
 
 ```
   CMJECSTaskDefinition:
@@ -203,3 +207,6 @@ O **TargetGroup** você utilizará para definir vários atributos:o nome do recu
       VpcId: !Ref VPC
 
 ```
+
+## Provisionando Container Docker (ECS)
+Vou acessar o serviço de CloudFormation e utilizar um template que eu criei. Você encontra o template no [git](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI01/aws/ecs-dotNet-negritando-treinamento.yaml).
