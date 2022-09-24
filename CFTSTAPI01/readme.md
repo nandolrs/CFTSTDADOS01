@@ -216,3 +216,5 @@ Vou acessar o serviço de CloudFormation e utilizar um template que eu criei. Vo
 Vamos acessar a ferramenta de CloudFormation e informar o arquivo de template (stack).
 
 <img width="641" alt="f12-cloudformation-entrada" src="https://user-images.githubusercontent.com/34346597/185969959-0ad610e2-3310-4fb1-a16a-64f3960b0c7c.png">
+
+<img width="573" alt="f45-cloudformation-entrada-ecs" src="https://user-images.githubusercontent.com/34346597/192105724-d646837f-d33c-4bf6-a579-074bb840d89f.png">
