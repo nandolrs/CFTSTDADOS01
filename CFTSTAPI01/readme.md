@@ -273,6 +273,5 @@ Aqui temos os recursos que a pilha disparou (Resources).
 <img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109100-c53a7b25-1835-4423-98d0-ce7686155d07.png">
 <img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109105-da9b5be6-217f-4276-b17f-1955e7ed638d.png">
 
-=======
+
 <img width="566" alt="f49-cloudformation-ecs-negritandoApi-revisao" src="https://user-images.githubusercontent.com/34346597/192107551-02943eed-9d06-4be8-93d5-f82c5c640a59.png">
->>>>>>> 818bc990f7c6a3405e6ec6e7f030b81490eb037a
