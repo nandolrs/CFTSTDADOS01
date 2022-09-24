@@ -113,7 +113,19 @@ docker image push nandolrs/cftstapi-image
 
 ## Implantando o container na Cloud AWS com CloudFormation
 
-Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Não vamos utilizar o console web mas sim novamente lançaremos mão do CloudFormation. Você encontra o template do CloudFormation no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI01/aws/ecs-dotNet-negritando-treinamento.yaml).
+Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Para isto precisamos criar um **cluster ECS** onde colocaremos as  **definições de tarefas**,  os **containers** e **serviços** criados a partir da imagem Docker.
+Depois de tudo pronto a estrutura vai ficar parecida com isto:
+
+<ul> 
+  <li> CMJECSCluster  ::  cluster [nome=cmj]
+    <ul>
+      <li> CMJECSTaskDefinition  ::  definição de tarefa [nome=negritando-ecs-api]  </li>
+      <li> CMJECSServiceHTTP  ::  serviço [nome=negritando-api] </li>
+    </ul>
+  </li>
+</ul>
+
+ Não vamos utilizar o console web mas sim novamente lançaremos mão do CloudFormation. Você encontra o template do CloudFormation no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI01/aws/ecs-dotNet-negritando-treinamento.yaml).
 
 
 ## CloudFormation (o pulo-do-gato)
@@ -231,7 +243,6 @@ Ao executar o template a ferramenta identifica os parâmetros (e seus valores pa
 <img width="563" alt="f47-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106260-3f0de112-31c6-45e1-a38f-af1f8aeac740.png">
 <img width="571" alt="f48-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106261-c2e8b0de-806f-452d-bffc-5477ae450aea.png">
 
-<<<<<<< HEAD
 Podemos dar uma última revisada nos dados informados antes mandar executar o template.
 
 <img width="566" alt="f49-cloudformation-ecs-negritandoApi-revisao" src="https://user-images.githubusercontent.com/34346597/192107551-02943eed-9d06-4be8-93d5-f82c5c640a59.png">
@@ -268,10 +279,9 @@ Aqui temos os eventos que a pilha disparou (Events).
 
 <img width="915" alt="f39-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109108-d76ea43e-e3ea-4870-828d-42a6f4884b4d.png">
 
-Aqui temos os recursos que a pilha disparou (Resources).
+Aqui temos os recursos que a pilha disparou (Resources). Observe o recurso com o ID físico (o que existe de fato) com o nome **cmj** e o ID lógico (fazendo referência ao que foi modelado no template CloudFormation) como o nome **CMJECSCluster**. Ele **cmj** é o nosso cluster ECS vivo. Vamos dar uma olhada nele mais pra frente. 
 
 <img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109100-c53a7b25-1835-4423-98d0-ce7686155d07.png">
 <img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109105-da9b5be6-217f-4276-b17f-1955e7ed638d.png">
 
 
-<img width="566" alt="f49-cloudformation-ecs-negritandoApi-revisao" src="https://user-images.githubusercontent.com/34346597/192107551-02943eed-9d06-4be8-93d5-f82c5c640a59.png">
