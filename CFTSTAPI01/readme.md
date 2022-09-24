@@ -117,18 +117,20 @@ Agora que temos a imagem no Docker Hub podemos implantar o container na cloud ut
 
 
 ## CloudFormation (o pulo-do-gato)
-Não vou contar novamente aquela estória de uma pequena organização local que cresceu e precisou de uma nova estrutura e serviços. Já contei na publicação anterior que trata do data tier que você encontra aqui. Mas podemos ir direto a uma breve explicação sobre as seções do CloudFormation.
+Não vou contar novamente aquela estória de uma pequena organização local que cresceu e precisou de uma nova estrutura e serviços. Já contei na publicação anterior que trata do data tier que você encontra [aqui](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01). Mas podemos ir direto a uma breve explicação sobre as seções do CloudFormation.
 
 ### Seções do CloudFormation
 Não vou voltar às definições de parâmetros e recursos, pois isto já foi abordado na publicação anterior. 
 
-* Parametros: Aqui a baixo eu deixei alguns parâmetros que julgo interessante destacar. Se você ler  a documentação do serviço AWS ECS vai ver que existem, entre outros, 2 objetos que devem ser definidos: task (tarefa), service (serviço) e target group (grupo alvo).
+* Parâmetros: Aqui a baixo eu deixei alguns parâmetros que julgo interessante destacar. Se você ler  a documentação do serviço AWS ECS vai ver que existem, entre outros, 3 recursos que devem ser definidos: [task](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html) (tarefa), [service](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html) (serviço) e [target group](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html) (grupo alvo).
 
-O **task** você utilizará para definir o nome do container e a imagem Docker a ser utilizada. Para tornar o template reutilizável adicionei, entre outros, 2 parâmetros: **ServiceName** e **ServiceImage**, para respectivamente tornar o nome do container e a imagem a ser utilizada configuráveis em tempo de execução. No template o nome do container terá o mesmo nome do serviço.
+ **ServiceName** e **ServiceImage**: para tornar o template reutilizável adicionei estes 2 parâmetros. Isto vai possibilitar que o nome do container e a imagem a ser utilizada sejam configuráveis em tempo de execução. No template o nome do container terá o mesmo nome do serviço. Eles serão utilizados para configurar os recursos **task** onde você utilizará para definir o nome do container e a imagem Docker a ser utilizada.
 
-O **service** você utilizará para definir o nome do serviço e a porta a ser utilizada pelo container. Para tornar o template reutilizável adicionei, entre outros, 1 parâmetro: **ContainerPort**, para tornar a porta do container configurável em tempo de execução.
+ **ContainerPort**: para tornar o template reutilizável adicionei este parâmetro. Isto vai possibilitar que a porta do container a ser utilizada seja configurável em tempo de execução. Ele será utilizado para configurar o recurso **service** onde você utilizará para definir a porta a ser utilizada pelo container.
 
-O **target group** você utilizará para definir o caminho a ser utilizado para verificar a saúde do serviço. Isto é muito legal porque entramos no âmbito da disponibilidade, ou seja, uma solicitação não pode ser entregue a um serviço doente ou indisponível. Para tornar o template reutilizável adicionei, entre outros, 1 parâmetro: **ServiceHealth**, para tornar o caminho configurável em tempo de execução.
+ **ServiceHealth**:  para tornar o template reutilizável adicionei este parâmetro. Isto vai possibilitar que o caminho a ser utilizado para determinar a saúde do serviço seja configurável em tempo de execução. Ele será utilizado para configurar o recurso **target group** onde você utilizará para definir o caminho a ser utilizado para verificar a saúde do serviço. Isto é muito legal porque entramos no âmbito da disponibilidade, ou seja, uma solicitação não pode ser entregue a um serviço doente ou indisponível.
+
+ Abaixo deixei um fragmento do arquivo Dockerfile utilizado com a definição dos parâmetros.
 ```
 Parameters:
   ServiceName:
