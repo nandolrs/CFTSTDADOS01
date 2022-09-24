@@ -304,7 +304,21 @@ Mas voltemos ao serviço que é por onde conseguimos acessar a tarefa, ou seja, 
 <img width="751" alt="f54-cloudformation-ecs-negritandoApi-serviceHealth" src="https://user-images.githubusercontent.com/34346597/192112402-0a35dff2-aa01-44a4-9c62-bd65bf033275.png">
 
 
-Vamos dar uma olhada na rede, finalmente quero ver se a API vai responder. Lembre-se que implementamos um método (endpoint) para verificar se ele está saudável o qual no devolverá a literal 'estou vivo' em caso de sucesso (saúde).
+Vamos dar uma olhada na rede, finalmente quero ver se a API vai responder. Lembre-se que implementamos um método (endpoint) para verificar se ele está saudável o qual nos devolverá a literal **'eu estou vivo'** em caso de sucesso (saúde). Em **DNS names** encontramos o endoint do balanceador de carga (load balance) que tem o papel de receber a requisição e fazer a ligação com o serviço (que faz a ligação com a task/container).
+
+<img width="762" alt="f55-cloudformation-ecs-negritandoApi-serviceNet" src="https://user-images.githubusercontent.com/34346597/192113190-90e1793f-ce3b-4450-96d7-116a756033d6.png">
+
+Daqui pra frente não tem mais novidade. O serviço tá de pé, ou seja, temos um cluster ECS com uma tarefa sendo acessível por um serviço disponível. Podemos abrir o client, no caso um navegador web qualquer, e conectar no endpoint do serviço e bla-bla-bla.
+
+<img width="960" alt="f56-cloudformation-ecs-negritandoApi-vivo" src="https://user-images.githubusercontent.com/34346597/192113493-c73950a8-e992-4803-9744-d256b98e3132.png">
+
+## Considerações finais
+Espero que esta publicação tenha sido útil de alguma forma. Na próxima veremos como subir um container gerado com Docker onde teremos empacotado e pronto pra viagem a camada de interface do usuário (UI tier) da solução onde utilizamos [React](https://reactjs.org/).
+
+Muito Axé pra todo mundo.
 
 
+Voltar ao [artigo mãe](https://github.com/nandolrs/CFTSTDADOS01) 
+
+<img width="599" alt="aws-certified-developer-architect" src="https://user-images.githubusercontent.com/34346597/186031305-723d7cde-d9b7-4652-b7b2-c0ba750d474b.png">
 
