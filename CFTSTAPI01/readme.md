@@ -228,5 +228,4 @@ Ao executar o template a ferramenta identifica os parâmetros (e seus valores pa
 <img width="563" alt="f47-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106260-3f0de112-31c6-45e1-a38f-af1f8aeac740.png">
 <img width="571" alt="f48-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106261-c2e8b0de-806f-452d-bffc-5477ae450aea.png">
 
-
-![image](https://user-images.githubusercontent.com/34346597/192107493-5ae65d6f-768f-4b55-b28f-4325620638ad.png)
+<img width="566" alt="f49-cloudformation-ecs-negritandoApi-revisao" src="https://user-images.githubusercontent.com/34346597/192107551-02943eed-9d06-4be8-93d5-f82c5c640a59.png">
