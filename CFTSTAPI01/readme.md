@@ -284,4 +284,27 @@ Aqui temos os recursos que a pilha disparou (Resources). Observe o recurso com o
 <img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109100-c53a7b25-1835-4423-98d0-ce7686155d07.png">
 <img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109105-da9b5be6-217f-4276-b17f-1955e7ed638d.png">
 
+Aqui temos o cluster ECS vivo. Temos 2 tarefas rodando. Entenda tarefa como uma instância da definição da tarefa, ou seja, o container já rodando. Observe que o provider é o Fargate que suporta Container Docker.
+
+<img width="753" alt="f50-cloudformation-ecs-negritandoApi-cluster" src="https://user-images.githubusercontent.com/34346597/192111639-10f7fec8-a1c9-427c-b6db-1572fb211bf8.png">
+
+Abrindo o cluster **cmj** podemos ver os serviços, tarefas, etc. O nome do serviço é **negritandoApi** como informamos no parâmetro lá atrás no formulário do Template.
+
+<img width="729" alt="f51-cloudformation-ecs-negritandoApi-service" src="https://user-images.githubusercontent.com/34346597/192111863-631a2de1-8487-485e-b2b6-18d10dbf5594.png">
+
+Temos 2 tarefas rodando (running) segundo a definição de tarefa. Na verdade consumimos as tarefas e as acessamos através do serviço. O serviço é apenas uma forma de se chegar a tarefa rodando.  É nela que temos o container, ou seja, a API rodando.
+<img width="724" alt="f52-cloudformation-ecs-negritandoApi-task" src="https://user-images.githubusercontent.com/34346597/192111976-8bbd5a12-3a4b-4086-9efd-a68bcaac8c76.png">
+
+E por falar em tarefa, aqui vemos a definição da tarefa. Podemos ver a configuração de cpu, memória, imagem docker, etc.
+
+<img width="748" alt="f53-cloudformation-ecs-negritandoApi-taskDefiniton" src="https://user-images.githubusercontent.com/34346597/192112231-fd1dd013-d745-4e8c-a6c9-60d3c0ff027c.png">
+
+Mas voltemos ao serviço que é por onde conseguimos acessar a tarefa, ou seja, a API que tanto queremos. Observe que no serviço temos 2 tasks rodando (Tasks). Temos também um load balance (balanceador de carga) dizendo que tem 2 alvos (Total targets), ambos estão saudáveis (Healthy targets) e nenhum está doente (indisponível). Pelos gráficos podemos interpretar que tá sobrando CPU e a memória está sendo bem utilizada.
+
+<img width="751" alt="f54-cloudformation-ecs-negritandoApi-serviceHealth" src="https://user-images.githubusercontent.com/34346597/192112402-0a35dff2-aa01-44a4-9c62-bd65bf033275.png">
+
+
+Vamos dar uma olhada na rede, finalmente quero ver se a API vai responder. Lembre-se que implementamos um método (endpoint) para verificar se ele está saudável o qual no devolverá a literal 'estou vivo' em caso de sucesso (saúde).
+
+
 
