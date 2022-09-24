@@ -221,4 +221,6 @@ Vamos acessar a ferramenta de CloudFormation e informar o arquivo de template (s
 
 Depois de carregar o arquivo de template podemos visualizá-lo no designer do serviço. Podemos ver os objetos modelados e o relacionamento de  dependência entre eles.
 
+<img width="951" alt="f46-cloudformation-designer-ecs" src="https://user-images.githubusercontent.com/34346597/192105953-f2c27e60-d0ee-42b1-9e4b-b2eb57445a5a.png">
+
 
