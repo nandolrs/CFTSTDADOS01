@@ -223,7 +223,52 @@ Depois de carregar o arquivo de template podemos visualizá-lo no designer do se
 
 <img width="951" alt="f46-cloudformation-designer-ecs" src="https://user-images.githubusercontent.com/34346597/192105953-f2c27e60-d0ee-42b1-9e4b-b2eb57445a5a.png">
 
-Ao executar o template a ferramenta identifica os parâmetros (e seus valores padrão) e monta um formulário para que possamos informar os dados desejados.
+Ao executar o template a ferramenta identifica os parâmetros (e seus valores padrão) e monta um formulário para que possamos informar os dados desejados. Observe os parâmetros que informei: 
+* ContainerPort: vamos utilizar a porta 80 HTTPS para se comunicar com o container.
+
+* LoadBalancePort: não falamos sobre LoadBalance, é um ótimo assunto para uma próxima publicação. Mas da pra contar uma estórinha pra entender: digamos que tu tem um loja com 1 funcionário, que consegue atender 3 pessoas de cada vez muito bem, só que entra uma 4a pessoa e esta fica esperando tempo demasiado. Para que esta 4a pessoa não vá embora insatisfeita com a demora no atendimento, você coloca uma 2a pessoa para atender por algum tempo. Quando você percebe que o movimento diminui torna a deixar apenas 1 pessoa atendendo retirando assim a 2a pessoa. **Load balance** , ou balanceamento de carga, é a funcionalidade que vai adicionar ou remover funcionários quando for necessário para que seus clientes se sintam satisfeitos com o atendimento da loja.
 
 <img width="563" alt="f47-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106260-3f0de112-31c6-45e1-a38f-af1f8aeac740.png">
 <img width="571" alt="f48-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106261-c2e8b0de-806f-452d-bffc-5477ae450aea.png">
+
+Podemos dar uma última revisada nos dados informados antes mandar executar o template.
+
+<img width="566" alt="f49-cloudformation-ecs-negritandoApi-revisao" src="https://user-images.githubusercontent.com/34346597/192107551-02943eed-9d06-4be8-93d5-f82c5c640a59.png">
+
+**ChangeSet**: vou mostrar agora uma funcionalidade muito útil do CloudFormation que não mostrei na primeira parte desta publicação quando discutimos o data tier: as análises de impacto (ChangeSet). ChangeSet te dá uma visão atencipada de tudo que vai mudar  (inclusões, exclusões, alterações) na tua infraestrutura. Todos os recursos que irão sofrer algum tipo de impacto irão aparecer, basta você decidir se quer ou não continuar com a aplicação/execução do template CloudFormation.
+Para isto basta selecionar o botão **Create change set**.
+
+<img width="567" alt="f30-cloudformation-ecs-negritandoApi-changeSet" src="https://user-images.githubusercontent.com/34346597/192107934-e3e94a57-5a8b-4f73-8fae-bbb7fdc55eef.png">
+
+Observe que na seção **Changes** são listados os Recursos (id, tipo, ...) e a ação que os mesmos irão sofrer. No nosso cenário, na primeira linha, vemos que um recurso do tipo AWS::ECS::Cluster, ID CMJECSCluster será adicionado.
+
+
+<img width="885" alt="f33-cloudformation-ecs-negritandoApi-changeSet" src="https://user-images.githubusercontent.com/34346597/192108076-d20251d9-9ffb-4951-b38b-806d34ded31d.png">
+
+
+<img width="892" alt="f34-cloudformation-ecs-negritandoApi-changeSet" src="https://user-images.githubusercontent.com/34346597/192108295-c98ef16c-223a-44b1-a034-1577de6a6a6f.png">
+
+Olha só! AWS trabalhando pra criar o serviço desejado. Vamos esperar um pouco enquanto ela trabalha pra criar o cluster ECS e os serviços contendo o container tão desejado rodando.
+
+<img width="921" alt="f37-cloudformation-ecs-negritandoApi-progress" src="https://user-images.githubusercontent.com/34346597/192108462-87eb8ecd-1da2-491e-9856-5ee2ce697d2f.png">
+
+Lembrando que nem tudo são flores. Houve um erro no meio da execução da pilha (stack) e automaticamente o desfazer (rollback) é acionado para que tudo seja desfeito, ou seja, nada fica pela metade.
+
+<img width="912" alt="f36-cloudformation-ecs-negritandoAPI-erro" src="https://user-images.githubusercontent.com/34346597/192108706-05756136-6394-4fc3-a1dc-f1c0d3ad51f6.png">
+
+
+O problema foi resolvido e olha no que deu! COMPLETE!ASEYORI! SUCESSO! FOI PRA CONTA! FECHOU!É NOIZ!
+
+Aqui temos a situação e informações  da pilha (Stack info). Entenda por pilha como lista de tarefas que a AWS constroi a partir da leitura do template CloudFormation. Cada item da lista é a criação de um recurso.
+ 
+<img width="913" alt="f38-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109107-89b1468a-8c64-44e5-a90b-4b9a84bd9b54.png">
+
+Aqui temos os eventos que a pilha disparou (Events).
+
+<img width="915" alt="f39-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109108-d76ea43e-e3ea-4870-828d-42a6f4884b4d.png">
+
+Aqui temos os recursos que a pilha disparou (Resources).
+
+<img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109100-c53a7b25-1835-4423-98d0-ce7686155d07.png">
+<img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109105-da9b5be6-217f-4276-b17f-1955e7ed638d.png">
+

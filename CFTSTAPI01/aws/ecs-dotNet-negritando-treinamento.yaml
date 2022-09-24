@@ -213,19 +213,7 @@ Resources:
         - Key: deregistration_delay.timeout_seconds
           Value: 60 # padrao e 300
       TargetType: ip
-      VpcId: !Ref VPC
-  ListenerHTTPS:
-    Condition:  CMJCertificateUsageQuestionCondition
-    Type: AWS::ElasticLoadBalancingV2::Listener
-    Properties:
-      DefaultActions:
-        - TargetGroupArn: !Ref TargetGroupHTTP # ouve HTTPS, mas entrega HTTP para o servico
-          Type: forward
-      LoadBalancerArn: !Ref LoadBalancer
-      Port: !Ref LoadBalancerPort
-      Protocol: HTTPS
-      Certificates:
-         - CertificateArn: !Ref CMJCertificateArn    
+      VpcId: !Ref VPC  
   ListenerHTTP:
     Condition:  CMJCertificateUsageQuestionNoCondition
     Type: AWS::ElasticLoadBalancingV2::Listener
@@ -235,9 +223,7 @@ Resources:
           Type: forward
       LoadBalancerArn: !Ref LoadBalancer
       Port: !Ref LoadBalancerPort
-      Protocol: HTTP # HTTPS
-#      Certificates:
-#         - CertificateArn: !Ref CMJCertificateArn            
+      Protocol: HTTP           
   CMJECSTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
@@ -299,7 +285,7 @@ Resources:
         id: 3066b0fa-3eb0-4c58-9f70-ae9560ac3cf2
     DependsOn:
       - CMJECSCluster    
-      - ListenerHTTP    # ListenerHTTPS
+      - ListenerHTTP    
 #  CMJRDSSecurityGroup:
 #    Type: AWS::EC2::SecurityGroup
 #    Properties:

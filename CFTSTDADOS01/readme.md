@@ -137,7 +137,7 @@ Podemos dar uma última revisada nos dados informados antes mandar executar o te
 
 <img width="499" alt="f17-cloudformation-rds-dbnegritando-revisao" src="https://user-images.githubusercontent.com/34346597/185970331-e73e1c38-353b-44e7-9d42-4f158bbc5595.png">
 
-Olha só! AWS trabalhando pra criar o serviço desejado. Vamos esperar um pouco enqanto ela trabalha pra criar a instâcia MySQL.
+Olha só! AWS trabalhando pra criar o serviço desejado. Vamos esperar um pouco enquanto ela trabalha pra criar a instâcia MySQL.
 
 <img width="534" alt="f18-cloudformation-rds-negritando-progress" src="https://user-images.githubusercontent.com/34346597/185970468-48420446-da0b-41f4-b57b-afa7505c5627.png">
 
