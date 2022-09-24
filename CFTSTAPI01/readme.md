@@ -225,4 +225,5 @@ Depois de carregar o arquivo de template podemos visualizá-lo no designer do se
 
 Ao executar o template a ferramenta identifica os parâmetros (e seus valores padrão) e monta um formulário para que possamos informar os dados desejados.
 
-
+<img width="563" alt="f47-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106260-3f0de112-31c6-45e1-a38f-af1f8aeac740.png">
+<img width="571" alt="f48-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106261-c2e8b0de-806f-452d-bffc-5477ae450aea.png">
