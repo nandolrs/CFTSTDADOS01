@@ -1,5 +1,5 @@
 #
-# pilha : cmj-rds-mysql
+# pilha : negritando-rds-mysql
 
 AWSTemplateFormatVersion: 2010-09-09
 Description: Template que cria uma instancia mysql. Autor Fernando Rodrigues

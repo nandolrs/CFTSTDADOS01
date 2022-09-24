@@ -8,6 +8,14 @@ namespace Negritando.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        [Route("api/")]
+        public string Consultar()
+        {
+            return "eu estou vivo";
+        }
+
         [HttpPost]
         [Route("api/usuario/")]
         public void Incluir([FromBody] Negritando.Web.Models.Usuario entidadeWeb)

@@ -51,9 +51,9 @@ O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os proj
 
 
 ```
-#------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
 # .net 
-#------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
@@ -61,26 +61,27 @@ WORKDIR /app
 
 # copy csproj and restore as distinct layers
 COPY *.sln .
-COPY CFTSTDADOS01/*.csproj      			./CFTSTDADOS01/      
-COPY CFTSTREGRAS01/*.csproj			        ./CFTSTREGRAS01/        
-COPY CFTSTAPI/*.csproj			            ./CFTSTAPI/        
+COPY CFTSTAPI01/*.csproj					       ./CFTSTAPI01/        
+COPY CFTSTREGRAS01/*.csproj      			   ./CFTSTREGRAS01/      
+COPY CFTSTDADOS01/*.csproj  				   ./CFTSTDADOS01/  
 
 RUN dotnet restore
 
 # copy everything else and build app
-COPY CFTSTDADOS01/.      			        ./CFTSTDADOS01/        
-COPY CFTSTREGRAS01/.      			        ./CFTSTREGRAS01/      
-COPY CFTSTAPI/.      			            ./CFTSTAPI/      
+COPY CFTSTAPI01/.					       ./CFTSTAPI01/        
+COPY CFTSTREGRAS01/.      			   ./CFTSTREGRAS01/      
+COPY CFTSTDADOS01/.  				   ./CFTSTDADOS01/  
 
-WORKDIR /app/CFTSTAPI
-RUN dotnet publish CFTSTAPI.csproj -c Release -o out /restore
+WORKDIR /app/CFTSTAPI01
+RUN dotnet publish CFTSTAPI01.csproj -c Release -o out /restore
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 
 WORKDIR /app
 
-COPY --from=build /app/CFTSTAPI/out ./
-ENTRYPOINT ["dotnet", "CFTSTAPI.dll"]
+COPY --from=build /app/CFTSTAPI01/out ./
+ENTRYPOINT ["dotnet", "CFTSTAPI01.dll"]
+
 
 ```
 
@@ -115,3 +116,88 @@ docker image push nandolrs/cftstapi-image
 Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Não vamos utilizar o console web mas sim novamente lançaremos mão do CloudFormation. Você encontra o template do CloudFormation no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI/aws/ecs-dotNet-negritando-treinamento.yaml).
 
 
+## CloudFormation (o pulo-do-gato)
+Não vou contar novamente aquela estória de uma pequena organização local que cresceu e precisou de uma nova estrutura e serviços. Já contei na publicação anterior que trata do data tier que você encontra aqui. Mas podemos ir direto a uma breve explicação sobre as seções do CloudFormation.
+
+### Seções do CloudFormation
+Não vou voltar às definições de parâmetros e recursos, pois isto já foi abordado na publicação anterior. 
+
+* Parametros: Aqui a baixo eu deixei alguns parâmetros que julgo interessante destacar. Se você ler  a documentação do serviço AWS ECS vai ver que existem, entre outros, 2 objetos que devem ser definidos: task (tarefa), service (serviço) e target group (grupo alvo).
+
+O **task** você utilizará para definir o nome do container e a imagem Docker a ser utilizada. Para tornar o template reutilizável adicionei, entre outros, 2 parâmetros: **ServiceName** e **ServiceImage**, para respectivamente tornar o nome do container e a imagem a ser utilizada configuráveis em tempo de execução. No template o nome do container terá o mesmo nome do serviço.
+
+O **service** você utilizará para definir o nome do serviço e a porta a ser utilizada pelo container. Para tornar o template reutilizável adicionei, entre outros, 1 parâmetro: **ContainerPort**, para tornar a porta do container configurável em tempo de execução.
+
+O **target group** você utilizará para definir o caminho a ser utilizado para verificar a saúde do serviço. Isto é muito legal porque entramos no âmbito da disponibilidade, ou seja, uma solicitação não pode ser entregue a um serviço doente ou indisponível. Para tornar o template reutilizável adicionei, entre outros, 1 parâmetro: **ServiceHealth**, para tornar o caminho configurável em tempo de execução.
+```
+Parameters:
+  ServiceName:
+    Type: String
+    Default: negritandoApi  
+  ServiceImage:
+    Type: String
+    Default: nandolrs/cftstapi-image    
+    # update with the name of the service
+  ContainerPort:
+    Type: Number
+    Default: 80
+  ServiceHealth:
+    Type: String
+    Default: /api
+    # caminho do health do servico
+```
+* Resource: Aqui a baixo eu deixei alguns recursos que julgo interessante destacar. Se você ler  a documentação do serviço AWS ECS vai ver que existem, entre outros, 2 recursos que devem ser definidos: TaskDefinition (tarefa) e TargetGroup.
+
+O **TaskDefinition** você utilizará para definir vários atributos: memória, cpu,  definições de container, log, etc. Observe os parâmetros **ServiceName** e **ServiceImage** citados acima entre os atributos e utilizados a baixo no recurso.
+
+O **TargetGroup** você utilizará para definir vários atributos:o nome do recurso, a porta do container, intervalos de verificação de saúde, o caminho a ser utilizado na verificação de saúde, a quantidade de verificações de saúde a serem realizadas antes de considerar o serviço doente ou indisponível, etc. Observe o parâmetro **ContainerPort** citado acima entre os atributos utilizados a baixo no recurso.
+
+```
+  CMJECSTaskDefinition:
+    Type: 'AWS::ECS::TaskDefinition'
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Memory: 4096
+      Cpu: 512
+      ExecutionRoleArn: !Ref CMJECSIamRoleEcsTasksExecution
+      TaskRoleArn : !Ref CMJECSIamRoleEcsTasks
+      ContainerDefinitions:
+        - Name:  !Ref ServiceName
+          Image: !Ref ServiceImage
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+          # envia os logs ao CloudWatch 
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref LogGroup
+              awslogs-stream-prefix: ecs
+          Environment :
+            - Name: CMJ_AMBIENTE
+              Value : !Ref EnviromentName
+            - Name: REACT_APP_SERVER_URL
+              Value : !Ref EnviromentNameApi              
+
+
+  TargetGroupHTTP:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      # espera pelo codigo de status  200 por padrao, a menos que especifique outro
+      HealthCheckPath: !Ref ServiceHealth
+      HealthCheckTimeoutSeconds: 5
+      UnhealthyThresholdCount: 2
+      HealthyThresholdCount: 2
+      Name: !Join ['', [!Ref ServiceName, TargetGroup]]
+      Port: !Ref ContainerPort
+      Protocol: HTTP
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: 60 # padrao e 300
+      TargetType: ip
+      VpcId: !Ref VPC
+
+```

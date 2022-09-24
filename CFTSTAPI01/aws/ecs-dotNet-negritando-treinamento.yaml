@@ -1,5 +1,5 @@
 #
-# pilha : cmj-ecs-api
+# pilha : negritando-ecs-api
 # - diagrama
 # client
 # 	security group 1 (filtro = in, tcp, 80, *ip)
@@ -7,7 +7,7 @@
 # 			security group (filtro = in, tcp, 80, security group 1)
 # 				task/servico/container
 # - dependencias
-#   arn:aws:iam::105254198021:policy/cmj-parameters-dev
+#   arn:aws:iam::{conta}:policy/cmj-parameters-dev
 
 
 AWSTemplateFormatVersion: 2010-09-09
@@ -15,7 +15,7 @@ Description: Template que cria uma instancia ecs/fargate. Autor Fernando Rodrigu
 Parameters:
   ServiceName:
     Type: String
-    Default: cmjApi  
+    Default: negritandoApi  
   ServiceImage:
     Type: String
     Default: nandolrs/cftstapi-image    
@@ -27,7 +27,7 @@ Parameters:
     Default: 80
   LoadBalancerPort:
     Type: Number
-    Default: 443    #original = 443 se usar o certificado, 80 se nao usar o certificado     
+    Default: 80    #original = 443 se usar o certificado, 80 se nao usar o certificado     
   ServiceHealth:
     Type: String
     Default: /api
@@ -58,7 +58,7 @@ Parameters:
     # to question if a certificate will be use
   CMJCertificateArn:
     Type: String
-    Default: arn:aws:acm:sa-east-1:105254198021:certificate/703972f3-0eb8-4205-a33b-20baa936d252
+    Default: arn:aws:acm:<REGIAO>:<CONTA>:certificate/<CERTIFICADO>
     Description : Informar o ARN SSL/TSL do certificado
     # update with the ARN of certificate
 Conditions:
@@ -226,6 +226,18 @@ Resources:
       Protocol: HTTPS
       Certificates:
          - CertificateArn: !Ref CMJCertificateArn    
+  ListenerHTTP:
+    Condition:  CMJCertificateUsageQuestionNoCondition
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref TargetGroupHTTP # ouve HTTPS, mas entrega HTTP para o servico
+          Type: forward
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: !Ref LoadBalancerPort
+      Protocol: HTTP # HTTPS
+#      Certificates:
+#         - CertificateArn: !Ref CMJCertificateArn            
   CMJECSTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
@@ -287,7 +299,31 @@ Resources:
         id: 3066b0fa-3eb0-4c58-9f70-ae9560ac3cf2
     DependsOn:
       - CMJECSCluster    
-      - ListenerHTTPS     
+      - ListenerHTTP    # ListenerHTTPS
+#  CMJRDSSecurityGroup:
+#    Type: AWS::EC2::SecurityGroup
+#    Properties:
+#      SecurityGroupIngress:
+#        - IpProtocol: tcp
+#          FromPort: 3306
+#          ToPort: 3306
+#      SourceSecurityGroupId: !Ref ContainerSecurityGroup      
+#      GroupId: !ImportValue CMJRDSSecurityGroupOutputs  #sg-0ded365152e2f34a5 #  CMJRDSSecurityGroupOut # dbnegritandoSecurityGroup
+#  CMJRDSSecurityGroup
+#    Type: AWS::EC2::SecurityGroupIngress
+#    Properties: 
+#      Description: String
+#      IpProtocol: tcp
+#      FromPort: 3306
+#      ToPort: 3306
+#      GroupId: !ImportValue dbnegritandoSecurityGroup
+#      SourceSecurityGroupId: !Ref ContainerSecurityGroup      
+#      #GroupName: !Ref LoadBalancerSecurityGroup
+#      #SourceSecurityGroupName: String
+#      #SourceSecurityGroupOwnerId: !ImportValue dbnegritandoSecurityGroup
+#      #SourcePrefixListId: String
+#      #CidrIp: String
+#      #CidrIpv6: String
 Outputs:
   CMJECSClusterOutputs:
     Description: Cluster ecs/fargate
