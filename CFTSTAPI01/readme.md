@@ -210,3 +210,6 @@ Abaixo deixei um fragmento do arquivo Dockerfile utilizado com a definição de 
 
 ## Provisionando Container Docker (ECS)
 Vou acessar o serviço de CloudFormation e utilizar um template que eu criei. Você encontra o template no [git](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI01/aws/ecs-dotNet-negritando-treinamento.yaml).
+
+<img width="550" alt="f44-cloudformation-ecs-script" src="https://user-images.githubusercontent.com/34346597/192105228-44bad5c6-b48b-42af-b906-8fe78728876a.png">
+
