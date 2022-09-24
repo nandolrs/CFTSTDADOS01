@@ -31,7 +31,7 @@ Os fontes desta implementação você encontra no [github](https://github.com/na
 
 ## Implementando a API
 
-Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. Para a manutenção da entidade implementamos um serviço expondo os verbos:POST, UPDATE, GET,GET e DELETE; respectivamente para incluir, atualizar, consultar, pesquisar e excluir. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI). 
+Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. Para a manutenção da entidade implementamos um serviço expondo os verbos:POST, UPDATE, GET,GET e DELETE; respectivamente para incluir, atualizar, consultar, pesquisar e excluir. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI01). 
 
 
 ## Empacotando tudo utilizando container
@@ -39,15 +39,15 @@ Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. 
 Depois de implementar os projetos  precisamos empacotar tudo para serem distribuídos como uma solução única. Se montarmos uma árvore de dependência ela ficaria assim:
 
 ```
-CFTSTAPI => CFTSTREGRAS01 => CFTSTDADOS01
+CFTSTAPI01 => CFTSTREGRAS01 => CFTSTDADOS01
 ```
 
-Devemos ler da seguinte forma: CFTSTAPI {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
+Devemos ler da seguinte forma: CFTSTAPI01 {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
 
 
 Depois de implementado e testado é aqui que entra o container. Vamos gerar e subir a imagem desta camada utilizando o [Docker desktop](https://www.docker.com/). Eu to usando como IDE o Visual Studio 2022 que vem com ferramentas pra facilitar o uso de Docker. Mas vamos utilizar o _CLI_ (Command Line Interface) do _**Docker desktop**_ que você deve baixar e instalar.
 
-O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Em resumo no Dockerfile você encontra instruções que vão: copiar e compilar os fontes necessários. Aqui em baixo coloquei conteúdo do arquivo Dockerfile utilizado. O arquivo você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI/Dockerfile).
+O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Em resumo no Dockerfile você encontra instruções que vão: copiar e compilar os fontes necessários. Aqui em baixo coloquei conteúdo do arquivo Dockerfile utilizado. O arquivo você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI01/Dockerfile).
 
 
 ```
@@ -88,7 +88,7 @@ ENTRYPOINT ["dotnet", "CFTSTAPI01.dll"]
 Para gerar a imagem podemos utilizar o CLI do Docker executando o comando _build_ conforme abaixo:
 
 ```
-docker build -f CFTSTAPI\Dockerfile -t cftstapi-image .
+docker build -f CFTSTAPI01\Dockerfile -t cftstapi-image .
 
 ```
 <img width="913" alt="f22-docker-build" src="https://user-images.githubusercontent.com/34346597/188293490-79843bdc-c952-4e17-937d-40feb4f04922.png">
@@ -113,7 +113,7 @@ docker image push nandolrs/cftstapi-image
 
 ## Implantando o container na Cloud AWS com CloudFormation
 
-Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Não vamos utilizar o console web mas sim novamente lançaremos mão do CloudFormation. Você encontra o template do CloudFormation no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI/aws/ecs-dotNet-negritando-treinamento.yaml).
+Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Não vamos utilizar o console web mas sim novamente lançaremos mão do CloudFormation. Você encontra o template do CloudFormation no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI01/aws/ecs-dotNet-negritando-treinamento.yaml).
 
 
 ## CloudFormation (o pulo-do-gato)
