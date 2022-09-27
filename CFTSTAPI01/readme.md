@@ -6,6 +6,9 @@
 
  Como requisito de segurança a solução necessita de uma funcionalidade de autenticação. Durante a análise do sistema foi levantada a necessidade de uma entidade **Usuario** que terá o papel de guardar os atributos de usuário e expor operações necessárias ao processo. Foram elencadas alguma operações bem como as validações que devem ocorrer antes de cada operação do CRUD:
 
+ ## Especificação e implementação da solução
+
+ Diante dos requisitos decidimos utilizar **MVC** (Model View Controller) , framework **.Net Core**, linguagem de programação **C#**, mensagens no formato JSON e transmissão REST. A tecnologia de container foi o [Docker](https://www.docker.com/). 
 <ul> 
   <li>Atributos
       <ul>
@@ -43,7 +46,7 @@
   <ul>
 </ul>
 
-Diante disto decidimos utilizar **MVC** (Model View Controller) , framework **.Net**  e como linguagem de programação **C#**. A tecnologia de container foi o [Docker](https://www.docker.com/). 
+
 
 ## Abstraindo a camada de dados
 
@@ -56,7 +59,7 @@ Os fontes desta implementação você encontra no [github](https://github.com/na
 
 ## Implementando e testando a API
 
-Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. Para a manutenção da entidade implementamos um serviço expondo os verbos:POST, UPDATE, GET,GET e DELETE; respectivamente para incluir, atualizar, consultar, pesquisar e excluir. Conforme especificado acima existe um endpoint /api sob o verbo GET que será utilizado para determinar a saúde da API respodendo com o código 200 e a literal 'eu estou vivo'. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI01). 
+Tudo foi exposto como API (Application Programming Interface) utilizando o MVC, JSON e REST. Conforme especificado acima existe um endpoint '/api' sob o verbo GET que será utilizado para determinar a saúde da API respondendo com o código 200 e a literal 'eu estou vivo'. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI01). 
 
 
 <img width="442" alt="f57-ide-visualstudio2022-testeEuEstouVivo" src="https://user-images.githubusercontent.com/34346597/192416823-39af97b6-7b01-4445-8d6c-fd9176bdf9f5.png">
