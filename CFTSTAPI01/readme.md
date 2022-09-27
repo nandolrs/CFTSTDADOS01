@@ -273,8 +273,8 @@ Ao executar o template a ferramenta identifica os parâmetros (e seus valores pa
 Temos também o que chamamos de **AutoScaling.**. AutoScaling tem o papel de aumentar a quantidade de funcionários atendendo quando o movimento aumenta e reduzir a quantidade de funcionários quando o movimento diminui.  Quando você percebe que o movimento diminui torna a deixar apenas 1 pessoa atendendo retirando assim a 2a pessoa. AutoScaling é a funcionalidade que vai adicionar ou remover funcionários quando for necessário para que seus clientes se sintam satisfeitos com o atendimento da loja.
 
 <img width="563" alt="f47-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106260-3f0de112-31c6-45e1-a38f-af1f8aeac740.png">
-<img width="571" alt="f48-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106261-c2e8b0de-806f-452d-bffc-5477ae450aea.png">
 
+<img width="571" alt="f48-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192421657-6ec93c9b-a1fd-48f1-843c-d57c4e69d8a3.png">
 Podemos dar uma última revisada nos dados informados antes mandar executar o template.
 
 <img width="566" alt="f49-cloudformation-ecs-negritandoApi-revisao" src="https://user-images.githubusercontent.com/34346597/192107551-02943eed-9d06-4be8-93d5-f82c5c640a59.png">
@@ -287,8 +287,7 @@ Para isto basta selecionar o botão **Create change set**.
 Observe que na seção **Changes** são listados os Recursos (id, tipo, ...) e a ação que os mesmos irão sofrer. No nosso cenário, na primeira linha, vemos que um recurso do tipo AWS::ECS::Cluster, ID CMJECSCluster será adicionado.
 
 
-<img width="885" alt="f33-cloudformation-ecs-negritandoApi-changeSet" src="https://user-images.githubusercontent.com/34346597/192108076-d20251d9-9ffb-4951-b38b-806d34ded31d.png">
-
+ <img width="885" alt="f33-cloudformation-ecs-negritandoApi-changeSet" src="https://user-images.githubusercontent.com/34346597/192421902-4ee032b9-43aa-4825-8240-f959369cbbc9.png">
 
 <img width="892" alt="f34-cloudformation-ecs-negritandoApi-changeSet" src="https://user-images.githubusercontent.com/34346597/192108295-c98ef16c-223a-44b1-a034-1577de6a6a6f.png">
 
@@ -306,7 +305,7 @@ O problema foi resolvido e olha no que deu! COMPLETE!ASEYORI! SUCESSO! FOI PRA C
 
 Aqui temos a situação e informações  da pilha (Stack info). Entenda por pilha como lista de tarefas que a AWS constroi a partir da leitura e interpretação do template CloudFormation. Cada item da lista é a criação de um recurso.
  
-<img width="913" alt="f38-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109107-89b1468a-8c64-44e5-a90b-4b9a84bd9b54.png">
+ <img width="913" alt="f38-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192422248-76dd7cda-d2e4-44ea-b969-acbafc122daf.png">
 
 Aqui temos os eventos que a pilha disparou (Events).
 
@@ -314,8 +313,9 @@ Aqui temos os eventos que a pilha disparou (Events).
 
 Aqui temos os recursos que a pilha criou (Resources). Observe o recurso com o ID físico (o que existe de fato) com o nome **cmj** e o ID lógico (o que foi modelado no template CloudFormation) como o nome **CMJECSCluster**. Ele **cmj** é o nosso cluster ECS vivo. Vamos dar uma olhada nele mais pra frente. 
 
-<img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109100-c53a7b25-1835-4423-98d0-ce7686155d07.png">
-<img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109105-da9b5be6-217f-4276-b17f-1955e7ed638d.png">
+<img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192422485-98ad7c33-95fa-479d-87c2-593222da7374.png">
+
+<img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192422677-5a0b6da5-b058-4930-9f66-f23e0ce23a48.png">
 
 Aqui temos o cluster ECS vivo. Temos 2 tarefas rodando. Entenda tarefa como uma instância da definição da tarefa, ou seja, o container já rodando. Observe que o provider é o Fargate que suporta Container Docker.
 
@@ -330,7 +330,8 @@ Temos 2 tarefas rodando (running) segundo a definição de tarefa. Na verdade co
 
 E por falar em tarefa, aqui vemos a definição da tarefa. Podemos ver a configuração de cpu, memória, imagem docker, etc.
 
-<img width="748" alt="f53-cloudformation-ecs-negritandoApi-taskDefiniton" src="https://user-images.githubusercontent.com/34346597/192112231-fd1dd013-d745-4e8c-a6c9-60d3c0ff027c.png">
+
+ <img width="748" alt="f53-cloudformation-ecs-negritandoApi-taskDefiniton" src="https://user-images.githubusercontent.com/34346597/192422993-a0154788-b523-42fa-a5ff-16d01b8b7435.png">
 
 Mas voltemos ao serviço que é por onde conseguimos acessar a tarefa, ou seja, a API que tanto queremos. Observe que no serviço temos 2 tasks rodando (Tasks). Temos também um load balance (balanceador de carga) dizendo que tem 2 alvos (Total targets), ambos estão saudáveis (Healthy targets) e nenhum está doente (indisponível). Pelos gráficos podemos interpretar que tá sobrando CPU e a memória está sendo bem utilizada.
 
@@ -339,7 +340,7 @@ Mas voltemos ao serviço que é por onde conseguimos acessar a tarefa, ou seja, 
 
 Vamos dar uma olhada na rede, finalmente quero ver se a API vai responder. Lembre-se que implementamos um método (endpoint) para verificar se ele está saudável o qual nos devolverá a literal **'eu estou vivo'** em caso de sucesso (saúde). Em **DNS names** encontramos o endoint do balanceador de carga (load balance) que tem o papel de receber a requisição e fazer a ligação com o serviço (que faz a ligação com a task/container).
 
-<img width="762" alt="f55-cloudformation-ecs-negritandoApi-serviceNet" src="https://user-images.githubusercontent.com/34346597/192113190-90e1793f-ce3b-4450-96d7-116a756033d6.png">
+<img width="762" alt="f55-cloudformation-ecs-negritandoApi-serviceNet" src="https://user-images.githubusercontent.com/34346597/192423266-842366e7-f6f4-4514-a50f-4c09a2e7d89d.png">
 
 Daqui pra frente não tem mais novidade. O serviço tá de pé, ou seja, temos um cluster ECS com uma tarefa sendo acessível por um serviço disponível. Podemos abrir o client, no caso um navegador web qualquer, e conectar no endpoint do serviço e bla-bla-bla.
 
