@@ -18,36 +18,31 @@
   <li>Métodos
     <ul>
         <li>
-          Incluir: é obrigatória a informação dos atributos: email, nome e senha;        
+          Incluir: é obrigatória a informação dos atributos: email, nome e senha. No nível da API usaremos o verbo POST e o endpoint '/api/usuario';      
         </li>
         <li>
-          Alterar: é obrigatória a informação dos atributos: email, nome e senha;
+          Alterar: é obrigatória a informação dos atributos: email, nome e senha.No nível da API usaremos o verbo PUT e o endpoint '/api/usuario';
         </li>
         <li>
-            Consultar: é obrigatória a informação de um código (ID) positivo  e MAIOR QUE 0 (zero);
+            Consultar: é obrigatória a informação de um código (ID) positivo  e MAIOR QUE 0 (zero). No nível da API usaremos o verbo GET e o endpoint '/api/usuario';
         </li>
         <li>
-            Pesquisar: é obrigatória a informação de ao menos um dos atributos a serem utilizados como critério de busca;        
+            Pesquisar: é obrigatória a informação de ao menos um dos atributos a serem utilizados como critério de busca. No nível da API usaremos o verbo GET e o endpoint '/api/usuario';        
         </li>
         <li>
-            Autenticar: é obrigatória a informação dos atributos: email e senha;
+            Autenticar: é obrigatória a informação dos atributos: email e senha. No nível da API usaremos o verbo POST e o endpoint '/api/usuario/autenticar';
         </li>     
         <li>
-            Autorizar: é obrigatória a informação do método desejado e token de segurança válido;
-        </li>                             
+            Autorizar: é obrigatória a informação do método desejado e token de segurança válido. No nível da API os dados estarão no header (token) e serão validados sempre que necessário acessar algum endpoint da API;
+        </li>    
+          <li>
+            EuEstouVivo: nenhuma informação é necessária. Vai servir como método para determinar a saúde do serviço retornando o código 200 e a literal 'eu estou vivo'. No nível da API usaremos o verbo GET e o endpoint '/api';   
+        </li>                           
     </ul>
   </li>
   <ul>
 </ul>
 
-
-
-
-
-
-
-
- 
 Diante disto decidimos utilizar **MVC** (Model View Controller) , framework **.Net**  e como linguagem de programação **C#**. A tecnologia de container foi o [Docker](https://www.docker.com/). 
 
 ## Abstraindo a camada de dados
@@ -59,9 +54,12 @@ Utilizamos um pacote do [NuGet](https://www.nuget.org/) chamado [CFCOREDADOSBASE
 Implementamos um projeto CFTSTREGRAS01 e colocamos as regras levantadas em tempo de análise do sistema.
 Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTREGRAS01). 
 
-## Implementando a API
+## Implementando e testando a API
 
-Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. Para a manutenção da entidade implementamos um serviço expondo os verbos:POST, UPDATE, GET,GET e DELETE; respectivamente para incluir, atualizar, consultar, pesquisar e excluir. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI01). 
+Tudo foi exposto como API (Application Programming Interface) utilizando o MVC. Para a manutenção da entidade implementamos um serviço expondo os verbos:POST, UPDATE, GET,GET e DELETE; respectivamente para incluir, atualizar, consultar, pesquisar e excluir. Conforme especificado acima existe um endpoint /api sob o verbo GET que será utilizado para determinar a saúde da API respodendo com o código 200 e a literal 'eu estou vivo'. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI01). 
+
+
+<img width="442" alt="f57-ide-visualstudio2022-testeEuEstouVivo" src="https://user-images.githubusercontent.com/34346597/192416823-39af97b6-7b01-4445-8d6c-fd9176bdf9f5.png">
 
 
 ## Empacotando tudo utilizando container
