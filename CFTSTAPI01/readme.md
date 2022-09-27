@@ -327,10 +327,10 @@ Abrindo o cluster **cmj** podemos ver os serviços, tarefas, etc. O nome do serv
 <img width="729" alt="f51-cloudformation-ecs-negritandoApi-service" src="https://user-images.githubusercontent.com/34346597/192111863-631a2de1-8487-485e-b2b6-18d10dbf5594.png">
 
 Temos 2 tarefas rodando (running) segundo a definição de tarefa. Na verdade consumimos as tarefas e as acessamos através do serviço. O serviço é apenas uma forma de se chegar na tarefa rodando. A tarefa vai estar dentro de um container e é nela (na tarefa) que teremos a API rodando.
+
 <img width="724" alt="f52-cloudformation-ecs-negritandoApi-task" src="https://user-images.githubusercontent.com/34346597/192111976-8bbd5a12-3a4b-4086-9efd-a68bcaac8c76.png">
 
 E por falar em tarefa, aqui vemos a definição da tarefa. Podemos ver a configuração de cpu, memória, imagem docker, etc.
-
 
  <img width="748" alt="f53-cloudformation-ecs-negritandoApi-taskDefiniton" src="https://user-images.githubusercontent.com/34346597/192422993-a0154788-b523-42fa-a5ff-16d01b8b7435.png">
 
