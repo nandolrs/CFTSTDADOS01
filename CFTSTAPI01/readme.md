@@ -6,23 +6,53 @@
 
  Como requisito de segurança a solução necessita de uma funcionalidade de autenticação. Durante a análise do sistema foi levantada a necessidade de uma entidade **Usuario** que terá o papel de guardar os atributos de usuário e expor operações necessárias ao processo. Foram elencadas alguma operações bem como as validações que devem ocorrer antes de cada operação do CRUD:
 
- * **Incluir**: é obrigatória a informação dos atributos: email, nome e senha;
+<ul> 
+  <li>Atributos
+      <ul>
+        <li>email</li>
+        <li>nome</li>
+        <li>senha</li>
+    </ul>
+  </li>
 
-* **Alterar**: é obrigatória a informação dos atributos: email, nome e senha;
+  <li>Métodos
+    <ul>
+        <li>
+          Incluir: é obrigatória a informação dos atributos: email, nome e senha;        
+        </li>
+        <li>
+          Alterar: é obrigatória a informação dos atributos: email, nome e senha;
+        </li>
+        <li>
+            Consultar: é obrigatória a informação de um código (ID) positivo  e MAIOR QUE 0 (zero);
+        </li>
+        <li>
+            Pesquisar: é obrigatória a informação de ao menos um dos atributos a serem utilizados como critério de busca;        
+        </li>
+        <li>
+            Autenticar: é obrigatória a informação dos atributos: email e senha;
+        </li>     
+        <li>
+            Autorizar: é obrigatória a informação do método desejado e token de segurança válido;
+        </li>                             
+    </ul>
+  </li>
+  <ul>
+</ul>
 
-* **Consultar**: é obrigatória a informação de um código positivo  e MAIOR QUE 0 (zero);
 
-* **Pesquisar**: é obrigatória a informação de ao menos um dos atributos a serem utilizados como critério de busca;
 
- * **Autenticar**: é obrigatória a informação dos atributos: email e senha;
 
- * **Autorizar**: é obrigatória a informação do método desejado e token de segurança válido;
 
+
+
+
+ 
 Diante disto decidimos utilizar **MVC** (Model View Controller) , framework **.Net**  e como linguagem de programação **C#**. A tecnologia de container foi o [Docker](https://www.docker.com/). 
 
 ## Abstraindo a camada de dados
 
-Utilizamos uma pacote do [NuGet](https://www.nuget.org/) chamado [CFCOREDADOSBASE](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) para abstrair a camada de dados. Ele implementa uma interface expondo os métodos que permitem a manutenção (Incluir, Alterar, Consultar, Pesquisar e Excluir) da entidade. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01); 
+Utilizamos um pacote do [NuGet](https://www.nuget.org/) chamado [CFCOREDADOSBASE](https://www.nuget.org/packages/CFCOREDADOSBASE/1.0.3?_src=template) para abstrair a camada de dados. Ele implementa uma interface expondo os métodos que permitem a manutenção (Incluir, Alterar, Consultar, Pesquisar e Excluir) da entidade. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01); 
 
 ## Implementando as regras de negócio
 
@@ -113,8 +143,7 @@ docker image push nandolrs/cftstapi-image
 
 ## Implantando o container na Cloud AWS com CloudFormation
 
-Agora que temos a imagem no Docker Hub podemos implantar o container na cloud utilizando o serviço AWS ECS + Fargate. Para isto precisamos criar um **cluster ECS** onde colocaremos as  **definições de tarefas**,  os **containers** e **serviços** criados a partir da imagem Docker.
-Depois de tudo pronto a estrutura vai ficar parecida com isto:
+Agora que temos a imagem no **Docker Hub** podemos implantar o container na cloud da AWS utilizando o serviço AWS ECS + [Fargate](https://aws.amazon.com/pt/fargate/). Para isto precisamos criar um **cluster ECS** onde colocaremos as  **definições de tarefas**,  os **containers** e **serviços** criados a partir da imagem Docker. Iremos configurar o ECS para manter 2 tarefas vivas (instâncias de definição de tarefa). Isto significa que o ECS + Fargate irá criar um container e dentro dele criará 2 tarefas vivas. Isto significa que se por acaso uma das tarefas tiver problema, uma nova tarefa será instanciada para manter sempre 2 tarefas sendo executadas conforme desejado. Depois de tudo pronto a estrutura vai ficar parecida com isto:
 
 <ul> 
   <li> CMJECSCluster  ::  cluster [nome=cmj]
@@ -130,7 +159,7 @@ Depois de tudo pronto a estrutura vai ficar parecida com isto:
 
 ## CloudFormation (o pulo-do-gato)
 Não vou contar novamente aquela estória de uma pequena organização local que cresceu e precisou de uma nova estrutura e serviços. Já contei na publicação anterior que trata do data tier que você encontra [aqui](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTDADOS01). 
-Mas sempre vale lembrar que esta publicação é de alto nível (meio distante), justamente porque nesta publicação você encontra os templates do CloudFormation utilizados. A força do CloudFormation é justamente documentar os detalhes que realmente foram utilizados.
+Mas sempre vale lembrar que esta publicação é de alto nível (meio distante), justamente porque nesta publicação você encontra os templates do CloudFormation utilizados (baixo nível). A força do CloudFormation é justamente armazenar os detalhes da infraestrutura para que possa ser reulizada sempre que for necessária.
 Mas podemos ir direto a uma breve explicação sobre as seções do CloudFormation.
 
 ### Seções do CloudFormation
@@ -138,13 +167,14 @@ Não vou voltar às definições de parâmetros e recursos, pois isto já foi ab
 
 * Parâmetros: Aqui a baixo eu deixei alguns parâmetros que julgo interessante destacar. Se você ler  a documentação do serviço AWS ECS vai ver que existem, entre outros, 3 recursos que devem ser definidos: [task](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-taskdefinition.html) (tarefa), [service](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ecs-service.html) (serviço) e [target group](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html) (grupo alvo).
 
- **ServiceName** e **ServiceImage**: para tornar o template reutilizável adicionei estes 2 parâmetros. Isto vai possibilitar que o nome do container e a imagem a ser utilizada sejam configuráveis em tempo de execução. No template o nome do container terá o mesmo nome do serviço. Eles serão utilizados para configurar os recursos **task** onde você utilizará para definir o nome do container e a imagem Docker a ser utilizada.
+ **ServiceName** e **ServiceImage**: para tornar o template reutilizável adicionei estes 2 parâmetros. Isto vai possibilitar que o nome do container e a imagem a ser utilizada sejam configuráveis em tempo de execução. No template o nome do container terá o mesmo nome do serviço. Eles serão utilizados para configurar os recursos **task** que você utilizará para definir o nome do container e a imagem Docker a ser utilizada.
 
  **ContainerPort**: para tornar o template reutilizável adicionei este parâmetro. Isto vai possibilitar que a porta do container a ser utilizada seja configurável em tempo de execução. Ele será utilizado para configurar o recurso **service** onde você utilizará para definir a porta a ser utilizada pelo container.
 
  **ServiceHealth**:  para tornar o template reutilizável adicionei este parâmetro. Isto vai possibilitar que o caminho a ser utilizado para determinar a saúde do serviço seja configurável em tempo de execução. Ele será utilizado para configurar o recurso **target group** onde você utilizará para definir o caminho a ser utilizado para verificar a saúde do serviço. Isto é muito legal porque entramos no âmbito da disponibilidade, ou seja, uma solicitação não pode ser entregue a um serviço doente ou indisponível.
 
- Abaixo deixei um fragmento do arquivo Dockerfile utilizado com a definição de alguns parâmetros.
+ Abaixo deixei um fragmento do template CloudFormation com a definição de alguns parâmetros.
+
 ```
 Parameters:
   ServiceName:
@@ -168,7 +198,7 @@ O [**TaskDefinition**](https://docs.aws.amazon.com/AWSCloudFormation/latest/User
 
 O [**TargetGroup**](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-elasticloadbalancingv2-targetgroup.html) você utilizará para definir vários atributos: o nome do recurso, a porta do container, intervalos de verificação de saúde, o caminho a ser utilizado na verificação de saúde, a quantidade de verificações de saúde a serem realizadas antes de considerar o serviço doente ou indisponível, etc. Observe o parâmetro **ContainerPort** citado acima entre os atributos utilizados a baixo no recurso.
 
-Abaixo deixei um fragmento do arquivo Dockerfile utilizado com a definição de alguns recursos.
+Abaixo deixei um fragmento do templace CloudFormation com alguns recursos.
 
 ```
   CMJECSTaskDefinition:
@@ -236,9 +266,10 @@ Depois de carregar o arquivo de template podemos visualizá-lo no designer do se
 <img width="951" alt="f46-cloudformation-designer-ecs" src="https://user-images.githubusercontent.com/34346597/192105953-f2c27e60-d0ee-42b1-9e4b-b2eb57445a5a.png">
 
 Ao executar o template a ferramenta identifica os parâmetros (e seus valores padrão) e monta um formulário para que possamos informar os dados desejados. Observe os parâmetros que informei: 
-* ContainerPort: vamos utilizar a porta 80 HTTPS para se comunicar com o container.
+* **ContainerPort**: vamos utilizar a porta 80 HTTPS para nos  comunicar com o container.
 
-* LoadBalancePort: não falamos sobre LoadBalance, é um ótimo assunto para uma próxima publicação. Mas da pra contar uma estórinha pra entender: digamos que tu tem um loja com 1 funcionário, que consegue atender 3 pessoas de cada vez muito bem, só que entra uma 4a pessoa e esta fica esperando tempo demasiado. Para que esta 4a pessoa não vá embora insatisfeita com a demora no atendimento, você coloca uma 2a pessoa para atender por algum tempo. Quando você percebe que o movimento diminui torna a deixar apenas 1 pessoa atendendo retirando assim a 2a pessoa. **Load balance** , ou balanceamento de carga, é a funcionalidade que vai adicionar ou remover funcionários quando for necessário para que seus clientes se sintam satisfeitos com o atendimento da loja.
+* **LoadBalancePort**: não falamos sobre LoadBalance, é um ótimo assunto para uma próxima publicação. Mas dá para contar uma estorinha pra entender: digamos que tu tem uma loja com 1 funcionário. Todos os clientes que chegarem na sua loja serão atendidos por este único funcionário. Ele consegue atender 3 pessoas de cada vez muito bem, só que entra uma 4a pessoa e esta fica esperando tempo demasiado. Para que esta pessoa não vá embora insatisfeita com a demora no atendimento, voce coloca uma 2a pessoa para atender por algum tempo e então você divide a fila de clientes pois agora existem 2 funcionários, passando a conduzir o próximo cliente sempre para o funcionário que estiver disponível. Em um cenário ideal com 10 clientes, cada funcionário atenderá 5 clientes, ou seja, existirá um equilíbrio (balanceamento) no atendimento.
+Temos também o que chamamos de **AutoScaling.**. AutoScaling tem o papel de aumentar a quantidade de funcionários atendendo quando o movimento aumenta e reduzir a quantidade de funcionários quando o movimento diminui.  Quando você percebe que o movimento diminui torna a deixar apenas 1 pessoa atendendo retirando assim a 2a pessoa. AutoScaling é a funcionalidade que vai adicionar ou remover funcionários quando for necessário para que seus clientes se sintam satisfeitos com o atendimento da loja.
 
 <img width="563" alt="f47-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106260-3f0de112-31c6-45e1-a38f-af1f8aeac740.png">
 <img width="571" alt="f48-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106261-c2e8b0de-806f-452d-bffc-5477ae450aea.png">
@@ -269,9 +300,10 @@ Lembrando que nem tudo são flores. Houve um erro no meio da execução da pilha
 <img width="912" alt="f36-cloudformation-ecs-negritandoAPI-erro" src="https://user-images.githubusercontent.com/34346597/192108706-05756136-6394-4fc3-a1dc-f1c0d3ad51f6.png">
 
 
+
 O problema foi resolvido e olha no que deu! COMPLETE!ASEYORI! SUCESSO! FOI PRA CONTA! FECHOU!É NOIZ!
 
-Aqui temos a situação e informações  da pilha (Stack info). Entenda por pilha como lista de tarefas que a AWS constroi a partir da leitura do template CloudFormation. Cada item da lista é a criação de um recurso.
+Aqui temos a situação e informações  da pilha (Stack info). Entenda por pilha como lista de tarefas que a AWS constroi a partir da leitura e interpretação do template CloudFormation. Cada item da lista é a criação de um recurso.
  
 <img width="913" alt="f38-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109107-89b1468a-8c64-44e5-a90b-4b9a84bd9b54.png">
 
@@ -279,7 +311,7 @@ Aqui temos os eventos que a pilha disparou (Events).
 
 <img width="915" alt="f39-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109108-d76ea43e-e3ea-4870-828d-42a6f4884b4d.png">
 
-Aqui temos os recursos que a pilha disparou (Resources). Observe o recurso com o ID físico (o que existe de fato) com o nome **cmj** e o ID lógico (fazendo referência ao que foi modelado no template CloudFormation) como o nome **CMJECSCluster**. Ele **cmj** é o nosso cluster ECS vivo. Vamos dar uma olhada nele mais pra frente. 
+Aqui temos os recursos que a pilha criou (Resources). Observe o recurso com o ID físico (o que existe de fato) com o nome **cmj** e o ID lógico (o que foi modelado no template CloudFormation) como o nome **CMJECSCluster**. Ele **cmj** é o nosso cluster ECS vivo. Vamos dar uma olhada nele mais pra frente. 
 
 <img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109100-c53a7b25-1835-4423-98d0-ce7686155d07.png">
 <img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192109105-da9b5be6-217f-4276-b17f-1955e7ed638d.png">
@@ -292,7 +324,7 @@ Abrindo o cluster **cmj** podemos ver os serviços, tarefas, etc. O nome do serv
 
 <img width="729" alt="f51-cloudformation-ecs-negritandoApi-service" src="https://user-images.githubusercontent.com/34346597/192111863-631a2de1-8487-485e-b2b6-18d10dbf5594.png">
 
-Temos 2 tarefas rodando (running) segundo a definição de tarefa. Na verdade consumimos as tarefas e as acessamos através do serviço. O serviço é apenas uma forma de se chegar a tarefa rodando.  É nela que temos o container, ou seja, a API rodando.
+Temos 2 tarefas rodando (running) segundo a definição de tarefa. Na verdade consumimos as tarefas e as acessamos através do serviço. O serviço é apenas uma forma de se chegar na tarefa rodando. A tarefa vai estar dentro de um container e é nela (na tarefa) que teremos a API rodando.
 <img width="724" alt="f52-cloudformation-ecs-negritandoApi-task" src="https://user-images.githubusercontent.com/34346597/192111976-8bbd5a12-3a4b-4086-9efd-a68bcaac8c76.png">
 
 E por falar em tarefa, aqui vemos a definição da tarefa. Podemos ver a configuração de cpu, memória, imagem docker, etc.
