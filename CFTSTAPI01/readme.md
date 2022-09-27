@@ -314,9 +314,9 @@ Aqui temos os eventos que a pilha disparou (Events).
 
 Aqui temos os recursos que a pilha criou (Resources). Observe o recurso com o ID físico (o que existe de fato) com o nome **cmj** e o ID lógico (o que foi modelado no template CloudFormation) como o nome **CMJECSCluster**. Ele **cmj** é o nosso cluster ECS vivo. Vamos dar uma olhada nele mais pra frente. 
 
-<img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192422485-98ad7c33-95fa-479d-87c2-593222da7374.png">
+ <img width="907" alt="f40-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192424217-a58a3494-9bd7-458d-a20d-0086825e0e10.png">
 
-<img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192422677-5a0b6da5-b058-4930-9f66-f23e0ce23a48.png">
+ <img width="912" alt="f41-cloudformation-ecs-negritandoApi-sucesso" src="https://user-images.githubusercontent.com/34346597/192424218-7e8a25ac-0957-4d58-9471-4501f958d4fe.png">
 
 Aqui temos o cluster ECS vivo. Temos 2 tarefas rodando. Entenda tarefa como uma instância da definição da tarefa, ou seja, o container já rodando. Observe que o provider é o Fargate que suporta Container Docker.
 
