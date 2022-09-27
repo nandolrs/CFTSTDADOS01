@@ -275,6 +275,7 @@ Temos também o que chamamos de **AutoScaling.**. AutoScaling tem o papel de aum
 <img width="563" alt="f47-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192106260-3f0de112-31c6-45e1-a38f-af1f8aeac740.png">
 
 <img width="571" alt="f48-cloudformation-ecs-negritandoApi" src="https://user-images.githubusercontent.com/34346597/192421657-6ec93c9b-a1fd-48f1-843c-d57c4e69d8a3.png">
+
 Podemos dar uma última revisada nos dados informados antes mandar executar o template.
 
 <img width="566" alt="f49-cloudformation-ecs-negritandoApi-revisao" src="https://user-images.githubusercontent.com/34346597/192107551-02943eed-9d06-4be8-93d5-f82c5c640a59.png">
