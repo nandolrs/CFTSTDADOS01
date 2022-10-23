@@ -310,7 +310,7 @@ Resources:
               Service: ecs-tasks.amazonaws.com
             Action: 'sts:AssumeRole'
       ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/aws-service-role/AWSApplicationAutoscalingECSServicePolicy
+        - 'arn:aws:iam::aws:policy/aws-service-role/AWSApplicationAutoscalingECSServicePolicy'
 
   CMJScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
@@ -319,12 +319,27 @@ Resources:
       MinCapacity: !Ref CMJAutoScalingMinCapacity
       ResourceId: !Ref CMJECSServiceHTTP
       RoleARN: !Ref CMJScalableTargetRoleARN
-      ScalableDimension: String
+      ScalableDimension: 'ecs:service:DesiredCount' 
       ScheduledActions: 
         - ScheduledAction
-      ServiceNamespace: String
-      SuspendedState: 
-        SuspendedState
+      ServiceNamespace: ecs 
+      #SuspendedState: 
+      #  SuspendedState
+
+  CMJScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties: 
+      PolicyName: AWSApplicationAutoscalingECSServicePolicy
+      PolicyType: TargetTrackingScaling
+      ResourceId: !Ref CMJECSServiceHTTP
+      ScalableDimension: 'ecs:service:DesiredCount'
+      ScalingTargetId: !Ref CMJScalableTarget
+      ServiceNamespace: ecs 
+      #StepScalingPolicyConfiguration: 
+      #  StepScalingPolicyConfiguration
+      TargetTrackingScalingPolicyConfiguration: 
+        TargetTrackingScalingPolicyConfiguration
+
 #  CMJRDSSecurityGroup:
 #    Type: AWS::EC2::SecurityGroup
 #    Properties:
