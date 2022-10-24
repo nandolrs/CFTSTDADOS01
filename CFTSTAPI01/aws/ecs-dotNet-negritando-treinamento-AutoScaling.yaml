@@ -61,16 +61,21 @@ Parameters:
     Default: arn:aws:acm:<REGIAO>:<CONTA>:certificate/<CERTIFICADO>
     Description : Informar o ARN SSL/TSL do certificado
     # update with the ARN of certificate
-  CMJAutoScalingMinCapacity
+  CMJAutoScalingMinCapacity:
     Type: Number
     Default: 2
     Description : Informar a quantidade minima de instancias
     # input the instances minimum quantity   ScalableTarget.MinCapacity
-  CMJAutoScalingMaxCapacity
+  CMJAutoScalingMaxCapacity:
     Type: Number
     Default: 4
     Description : Informar a quantidade maxima de instancias
     # input the instances maximum quantity   ScalableTarget.MaxCapacity
+  CMJAutoScalingTargetValue:
+      Type: Number
+      Default: 90
+      Description : Informar percentual maximo de CPU antes de escalar
+      # input the max percent CPU before auto scaling   TargetTrackingScalingPolicyConfiguration.TargetValue
 Conditions:
   CMJCertificateUsageQuestionCondition: !Equals
     - !Ref CertificateUsageQuestion
@@ -299,46 +304,44 @@ Resources:
 
 # auto scaling
 
-  CMJScalableTargetRoleARN:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: cmjIAMRole-Autoscaling-ECSService
-      AssumeRolePolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: ecs-tasks.amazonaws.com
-            Action: 'sts:AssumeRole'
-      ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/aws-service-role/AWSApplicationAutoscalingECSServicePolicy'
-
   CMJScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties: 
-      MaxCapacity: !Ref CMJAutoScalingMinCapacity
       MinCapacity: !Ref CMJAutoScalingMinCapacity
-      ResourceId: !Ref CMJECSServiceHTTP
-      RoleARN: !Ref CMJScalableTargetRoleARN
+      MaxCapacity: !Ref CMJAutoScalingMinCapacity
+      ResourceId: !Join ['/', [service, !Ref CMJECSCluster, !Ref ServiceName ]]  #CMJECSServiceHTTP
+      RoleARN: 
+        Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService'
       ScalableDimension: 'ecs:service:DesiredCount' 
-      ScheduledActions: 
-        - ScheduledAction
+      #ScheduledActions: 
+        #- ScheduledAction
       ServiceNamespace: ecs 
       #SuspendedState: 
       #  SuspendedState
-
+    DependsOn:
+      - CMJECSServiceHTTP
   CMJScalingPolicy:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
     Properties: 
-      PolicyName: AWSApplicationAutoscalingECSServicePolicy
+      PolicyName: !Join ['', [!Ref ServiceName, ScalingPolicy]]
       PolicyType: TargetTrackingScaling
-      ResourceId: !Ref CMJECSServiceHTTP
-      ScalableDimension: 'ecs:service:DesiredCount'
+      #ResourceId: !Ref CMJECSServiceHTTP
+      #ScalableDimension: 'ecs:service:DesiredCount'
       ScalingTargetId: !Ref CMJScalableTarget
-      ServiceNamespace: ecs 
+      #ServiceNamespace: ecs 
       #StepScalingPolicyConfiguration: 
       #  StepScalingPolicyConfiguration
       TargetTrackingScalingPolicyConfiguration: 
-        TargetTrackingScalingPolicyConfiguration
+        #CustomizedMetricSpecification: 
+        #  CustomizedMetricSpecification
+        #DisableScaleIn: Boolean
+        PredefinedMetricSpecification: 
+            PredefinedMetricType: ECSServiceAverageCPUUtilization # ALBRequestCountPerTarget 
+            #ResourceLabel: String
+        #ScaleInCooldown: Integer
+        #ScaleOutCooldown: Integer
+        TargetValue: !Ref CMJAutoScalingTargetValue
+
 
 #  CMJRDSSecurityGroup:
 #    Type: AWS::EC2::SecurityGroup
