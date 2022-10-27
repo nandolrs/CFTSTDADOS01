@@ -68,12 +68,12 @@ Parameters:
     # input the instances minimum quantity   ScalableTarget.MinCapacity
   CMJAutoScalingMaxCapacity:
     Type: Number
-    Default: 4
+    Default: 6
     Description : Informar a quantidade maxima de instancias
     # input the instances maximum quantity   ScalableTarget.MaxCapacity
   CMJAutoScalingTargetValue:
       Type: Number
-      Default: 90
+      Default: 3  
       Description : Informar percentual maximo de CPU antes de escalar
       # input the max percent CPU before auto scaling   TargetTrackingScalingPolicyConfiguration.TargetValue
 Conditions:
@@ -245,8 +245,8 @@ Resources:
       RequiresCompatibilities:
         - FARGATE
       NetworkMode: awsvpc
-      Memory: 4096
-      Cpu: 512
+      Memory: 512 #4096
+      Cpu: 256 #512 
       ExecutionRoleArn: !Ref CMJECSIamRoleEcsTasksExecution
       TaskRoleArn : !Ref CMJECSIamRoleEcsTasks
       ContainerDefinitions:
@@ -308,7 +308,7 @@ Resources:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties: 
       MinCapacity: !Ref CMJAutoScalingMinCapacity
-      MaxCapacity: !Ref CMJAutoScalingMinCapacity
+      MaxCapacity: !Ref CMJAutoScalingMaxCapacity
       ResourceId: !Join ['/', [service, !Ref CMJECSCluster, !Ref ServiceName ]]  #CMJECSServiceHTTP
       RoleARN: 
         Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService'
@@ -336,10 +336,10 @@ Resources:
         #  CustomizedMetricSpecification
         #DisableScaleIn: Boolean
         PredefinedMetricSpecification: 
-            PredefinedMetricType: ECSServiceAverageCPUUtilization # ALBRequestCountPerTarget 
+            PredefinedMetricType: ECSServiceAverageCPUUtilization # ECSServiceAverageCPUUtilization/ECSServiceAverageMemoryUtilization/ ALBRequestCountPerTarget 
             #ResourceLabel: String
-        #ScaleInCooldown: Integer
-        #ScaleOutCooldown: Integer
+        #ScaleInCooldown: Integer # padrao 300 segundos
+        #ScaleOutCooldown: Integer  # padrao 300 segundos
         TargetValue: !Ref CMJAutoScalingTargetValue
 
 
