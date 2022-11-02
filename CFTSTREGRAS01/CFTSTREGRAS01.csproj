@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CFCOREUTIL" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CFTSTDADOS01\CFTSTDADOS01.csproj" />
   </ItemGroup>
 

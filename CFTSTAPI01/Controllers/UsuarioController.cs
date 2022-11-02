@@ -13,7 +13,12 @@ namespace Negritando.Controllers
         [Route("api/")]
         public string Consultar()
         {
-            return "eu estou vivo";
+
+            Negritando.Rule.Usuario regras = new Rule.Usuario();
+
+            string v = regras.BuscarVersao();
+
+            return "eu estou vivo - " + v;
         }
 
         [HttpPost]

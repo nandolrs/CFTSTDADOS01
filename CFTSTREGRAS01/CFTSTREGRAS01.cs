@@ -4,6 +4,16 @@ namespace Negritando.Rule
 {
     public class Usuario
     {
+        public string BuscarVersao()
+        {
+            //cf.util.Biblioteca oBiblioteca = new cf.util.Biblioteca();
+            //string sVersao = oBiblioteca.BuscarVersao();
+            //return sVersao;
+
+            return Environment.GetEnvironmentVariable("CMJ_VERSAO");
+
+
+        }
         public void Incluir(Negritando.Model.Usuario entidade)
         {
 
