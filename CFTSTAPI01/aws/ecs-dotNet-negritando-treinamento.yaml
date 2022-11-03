@@ -277,15 +277,16 @@ Resources:
               - Key: caminho
                 Value: 2
       ListenerArn: !Ref ListenerHTTP
-      Priority: 2      
+      Priority: 2
+
   CMJECSTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
       RequiresCompatibilities:
         - FARGATE
       NetworkMode: awsvpc
-      Memory: 4096
-      Cpu: 512
+      Memory: 512 #4096
+      Cpu: 256 #512 
       ExecutionRoleArn: !Ref CMJECSIamRoleEcsTasksExecution
       TaskRoleArn : !Ref CMJECSIamRoleEcsTasks
       ContainerDefinitions:
@@ -377,7 +378,6 @@ Resources:
       - CMJECSCluster    
       - ListenerHTTP  
       - TargetGroupHTTP  
-
   CMJECSServiceHTTP1:
     Type: 'AWS::ECS::Service'
     Properties:
