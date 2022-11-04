@@ -16,10 +16,12 @@ Parameters:
   ServiceName:
     Type: String
     Default: negritandoApi  
+  ServiceName1:
+    Type: String
+    Default: negritandoApi1  
   ServiceImage:
     Type: String
     Default: nandolrs/cftstapi-image    
-    # update with the name of the service
   VPC:
     Type: AWS::EC2::VPC::Id
   ContainerPort:
@@ -172,31 +174,31 @@ Resources:
             Action: 'sts:AssumeRole'
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
-  LogGroup:
+  CMJLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Ref LogGroupNamePath
-  ContainerSecurityGroup:
+  CMJContainerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Join ['', [!Ref ServiceName, ContainerSecurityGroup]]
+      GroupDescription: !Join ['', [!Ref ServiceName, CMJContainerSecurityGroup]]
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: !Ref ContainerPort
           ToPort: !Ref ContainerPort
-          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup      
-  LoadBalancerSecurityGroup:
+          SourceSecurityGroupId: !Ref CMJLoadBalancerSecurityGroup      
+  CMJLoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Join ['', [!Ref ServiceName, LoadBalancerSecurityGroup]]
+      GroupDescription: !Join ['', [!Ref ServiceName, CMJLoadBalancerSecurityGroup]]
       VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: !Ref LoadBalancerPort
           ToPort: !Ref LoadBalancerPort
           CidrIp: 0.0.0.0/0      
-  LoadBalancer:
+  CMJLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       LoadBalancerAttributes:
@@ -207,12 +209,12 @@ Resources:
       # "internal" tambem e uma opcao
       Scheme: internet-facing
       SecurityGroups:
-        - !Ref LoadBalancerSecurityGroup
+        - !Ref CMJLoadBalancerSecurityGroup
       Subnets:
             - subnet-ecbaf9b7
             - subnet-561f5b30
             - subnet-06106a4f
-  TargetGroupHTTP:
+  CMJTargetGroupHTTP:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       HealthCheckIntervalSeconds: 10
@@ -228,17 +230,68 @@ Resources:
         - Key: deregistration_delay.timeout_seconds
           Value: 60 # padrao e 300
       TargetType: ip
-      VpcId: !Ref VPC  
-  ListenerHTTP:
+      VpcId: !Ref VPC
+  CMJTargetGroupHTTP1:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      # espera pelo codigo de status  200 por padrao, a menos que especifique outro
+      HealthCheckPath: !Ref ServiceHealth
+      HealthCheckTimeoutSeconds: 5
+      UnhealthyThresholdCount: 2
+      HealthyThresholdCount: 2
+      Name: !Join ['', [!Ref ServiceName, TargetGroup,'1']]
+      Port: !Ref ContainerPort
+      Protocol: HTTP
+      TargetGroupAttributes:
+        - Key: deregistration_delay.timeout_seconds
+          Value: 60 # padrao e 300
+      TargetType: ip
+      VpcId: !Ref VPC        
+  CMJListenerHTTP:
     Condition:  CMJCertificateUsageQuestionNoCondition
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref TargetGroupHTTP # ouve HTTPS, mas entrega HTTP para o servico
+        - TargetGroupArn: !Ref CMJTargetGroupHTTP # ouve HTTPS, mas entrega HTTP para o servico
           Type: forward
-      LoadBalancerArn: !Ref LoadBalancer
+      LoadBalancerArn: !Ref CMJLoadBalancer
       Port: !Ref LoadBalancerPort
-      Protocol: HTTP           
+      Protocol: HTTP
+  ListenerRuleHTTP:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties: 
+      Actions: 
+        - ForwardConfig: 
+            TargetGroups: 
+              - TargetGroupArn: !Ref CMJTargetGroupHTTP
+                #Weight: Integer
+          Type: forward 
+      Conditions: 
+        - Field : query-string
+          QueryStringConfig : 
+            Values: 
+              - Key: caminho
+                Value: 1
+      ListenerArn: !Ref CMJListenerHTTP
+      Priority: 1      
+  ListenerRuleHTTP1:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties: 
+      Actions: 
+        - ForwardConfig: 
+            TargetGroups: 
+              - TargetGroupArn: !Ref CMJTargetGroupHTTP1
+                #Weight: Integer
+          Type: forward 
+      Conditions: 
+        - Field : query-string
+          QueryStringConfig : 
+            Values: 
+              - Key: caminho
+                Value: 2
+      ListenerArn: !Ref CMJListenerHTTP
+      Priority: 2      
   CMJECSTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
@@ -259,13 +312,49 @@ Resources:
             LogDriver: awslogs
             Options:
               awslogs-region: !Ref AWS::Region
-              awslogs-group: !Ref LogGroup
+              awslogs-group: !Ref CMJLogGroup
               awslogs-stream-prefix: ecs
           Environment :
             - Name: CMJ_AMBIENTE
               Value : !Ref EnviromentName
             - Name: REACT_APP_SERVER_URL
-              Value : !Ref EnviromentNameApi              
+              Value : !Ref EnviromentNameApi
+            - Name: CMJ_VERSAO
+              Value : v1r-1UM                            
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 0539f1a2-9de4-436a-b92b-5c965b0a443a
+    DependsOn:
+      - CMJECSCluster
+  CMJECSTaskDefinition1:
+    Type: 'AWS::ECS::TaskDefinition'
+    Properties:
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Memory: 512 #4096
+      Cpu: 256 #512 
+      ExecutionRoleArn: !Ref CMJECSIamRoleEcsTasksExecution
+      TaskRoleArn : !Ref CMJECSIamRoleEcsTasks
+      ContainerDefinitions:
+        - Name:  !Ref ServiceName1  
+          Image: !Ref ServiceImage
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+          # envia os logs ao CloudWatch 
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref CMJLogGroup
+              awslogs-stream-prefix: ecs
+          Environment :
+            - Name: CMJ_AMBIENTE
+              Value : !Ref EnviromentName
+            - Name: REACT_APP_SERVER_URL
+              Value : !Ref EnviromentNameApi   
+            - Name: CMJ_VERSAO
+              Value : v1r-2DOIS                              
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 0539f1a2-9de4-436a-b92b-5c965b0a443a
@@ -285,7 +374,7 @@ Resources:
       NetworkConfiguration :
         AwsvpcConfiguration :
           SecurityGroups : 
-            - !Ref ContainerSecurityGroup
+            - !Ref CMJContainerSecurityGroup
           AssignPublicIp : ENABLED
           Subnets : 
             - subnet-ecbaf9b7
@@ -294,30 +383,55 @@ Resources:
       LoadBalancers:
         - ContainerName: !Ref ServiceName # mesmo que ContainerDefinitions.Name
           ContainerPort: !Ref ContainerPort
-          TargetGroupArn: !Ref TargetGroupHTTP            
+          TargetGroupArn: !Ref CMJTargetGroupHTTP            
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 3066b0fa-3eb0-4c58-9f70-ae9560ac3cf2
     DependsOn:
       - CMJECSCluster    
-      - ListenerHTTP  
-
-# auto scaling
-
+      - CMJListenerHTTP
+      - CMJTargetGroupHTTP  
+  CMJECSServiceHTTP1:
+    Type: 'AWS::ECS::Service'
+    Properties:
+      ServiceName: !Ref ServiceName1 # ServiceName
+      LaunchType : FARGATE
+      TaskDefinition : !Ref CMJECSTaskDefinition1
+      Cluster : !Ref CMJECSCluster   
+      DesiredCount : 2
+      DeploymentConfiguration :
+        MinimumHealthyPercent : 100
+        MaximumPercent : 200
+      NetworkConfiguration :
+        AwsvpcConfiguration :
+          SecurityGroups : 
+            - !Ref CMJContainerSecurityGroup
+          AssignPublicIp : ENABLED
+          Subnets : 
+            - subnet-ecbaf9b7
+            - subnet-561f5b30
+            - subnet-06106a4f
+      LoadBalancers:
+        - ContainerName: !Ref ServiceName1 # mesmo que ContainerDefinitions.Name
+          ContainerPort: !Ref ContainerPort
+          TargetGroupArn: !Ref CMJTargetGroupHTTP1            
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 3066b0fa-3eb0-4c58-9f70-ae9560ac3cf2
+    DependsOn:
+      - CMJECSCluster    
+      - CMJListenerHTTP           
+      - CMJTargetGroupHTTP1  
   CMJScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties: 
       MinCapacity: !Ref CMJAutoScalingMinCapacity
       MaxCapacity: !Ref CMJAutoScalingMaxCapacity
-      ResourceId: !Join ['/', [service, !Ref CMJECSCluster, !Ref ServiceName ]]  #CMJECSServiceHTTP
+      ResourceId: !Join ['/', [service, !Ref CMJECSCluster, !Ref ServiceName ]] 
       RoleARN: 
         Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService'
       ScalableDimension: 'ecs:service:DesiredCount' 
-      #ScheduledActions: 
-        #- ScheduledAction
       ServiceNamespace: ecs 
-      #SuspendedState: 
-      #  SuspendedState
     DependsOn:
       - CMJECSServiceHTTP
   CMJScalingPolicy:
@@ -325,48 +439,11 @@ Resources:
     Properties: 
       PolicyName: !Join ['', [!Ref ServiceName, ScalingPolicy]]
       PolicyType: TargetTrackingScaling
-      #ResourceId: !Ref CMJECSServiceHTTP
-      #ScalableDimension: 'ecs:service:DesiredCount'
       ScalingTargetId: !Ref CMJScalableTarget
-      #ServiceNamespace: ecs 
-      #StepScalingPolicyConfiguration: 
-      #  StepScalingPolicyConfiguration
       TargetTrackingScalingPolicyConfiguration: 
-        #CustomizedMetricSpecification: 
-        #  CustomizedMetricSpecification
-        #DisableScaleIn: Boolean
         PredefinedMetricSpecification: 
             PredefinedMetricType: ECSServiceAverageCPUUtilization # ECSServiceAverageCPUUtilization/ECSServiceAverageMemoryUtilization/ ALBRequestCountPerTarget 
-            #ResourceLabel: String
-        #ScaleInCooldown: Integer # padrao 300 segundos
-        #ScaleOutCooldown: Integer  # padrao 300 segundos
         TargetValue: !Ref CMJAutoScalingTargetValue
-
-
-#  CMJRDSSecurityGroup:
-#    Type: AWS::EC2::SecurityGroup
-#    Properties:
-#      SecurityGroupIngress:
-#        - IpProtocol: tcp
-#          FromPort: 3306
-#          ToPort: 3306
-#      SourceSecurityGroupId: !Ref ContainerSecurityGroup      
-#      GroupId: !ImportValue CMJRDSSecurityGroupOutputs  #sg-0ded365152e2f34a5 #  CMJRDSSecurityGroupOut # dbnegritandoSecurityGroup
-#  CMJRDSSecurityGroup
-#    Type: AWS::EC2::SecurityGroupIngress
-#    Properties: 
-#      Description: String
-#      IpProtocol: tcp
-#      FromPort: 3306
-#      ToPort: 3306
-#      GroupId: !ImportValue dbnegritandoSecurityGroup
-#      SourceSecurityGroupId: !Ref ContainerSecurityGroup      
-#      #GroupName: !Ref LoadBalancerSecurityGroup
-#      #SourceSecurityGroupName: String
-#      #SourceSecurityGroupOwnerId: !ImportValue dbnegritandoSecurityGroup
-#      #SourcePrefixListId: String
-#      #CidrIp: String
-#      #CidrIpv6: String
 Outputs:
   CMJECSClusterOutputs:
     Description: Cluster ecs/fargate
@@ -383,3 +460,8 @@ Outputs:
     Value: !Ref CMJECSIamRoleEcsTasksExecution
     Export:
       Name: CMJECSIamRoleEcsTasksExecutionOut          
+  CMJLoadBalancerOutputs:
+    Description: Load balance to use
+    Value: !Ref CMJLoadBalancer
+    Export:
+      Name: CMJLoadBalancerOut 
