@@ -1,5 +1,5 @@
 #
-# pilha : negritando-rds-mysql
+# pilha : negritando-parameterStore
 
 AWSTemplateFormatVersion: 2010-09-09
 Description: Template que cria uma instancia mysql. Autor Fernando Rodrigues
@@ -80,10 +80,10 @@ Parameters:
 Conditions:
   CMJCriarParametroInstanciaSimCondition: !Equals
     - !Ref CMJDBInstanceEndpointCriarParametro
-    - sim
+    - nao
   CMJCriarParametroInstanciaNaoCondition: !Equals
     - !Ref CMJDBInstanceEndpointCriarParametro
-    - nao
+    - sim    
 Metadata: 
   AWS::CloudFormation::Interface: 
     ParameterGroups: 
@@ -125,13 +125,13 @@ Metadata:
       DBPassword: 
         default: "Senha"
       CMJParametrosUsuarioTimeout: 
-        default: "Prazo para conexao (time-out)"     
+        default: "Prazo para conexao (time-out)"                        
       CMJVpcId: 
         default: "Nome da rede"    
       CMJCidrIpPermitido: 
         default: "IP para acesso publico"    
       CMJEnviromentName: 
-        default: "Ambiente (desenvolvimento/testes/producao/treinamento)"
+        default: "Ambiente (desenvolvimento/testes/producao/treinamento)"                                       
       CMJDBInstanceEndpointCriarParametro: 
         default: "Criar parametro da instancia?"                                                               
 Resources:
@@ -144,10 +144,10 @@ Resources:
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
-      Value: !Ref CMJDBInstanceEndpoint #  !GetAtt CMJRDSDBInstance.DBInstanceIdentifier  #  !Ref CMJDBInstanceIdentifier      
+      Value:  nomeDoServidor #!Ref DBInstanceID      
   CMJParametrosServidorPorta:
     Type: AWS::SSM::Parameter
-    DependsOn: CMJRDSDBInstance
+    #DependsOn: CMJRDSDBInstance
     Condition: CMJCriarParametroInstanciaNaoCondition    
     Properties: 
       Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/servidor/porta']]
@@ -191,51 +191,3 @@ Resources:
         Ambiente : !Ref CMJEnviromentName
       Type: String 
       Value:  360000  
-  CMJRDSSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Condition: CMJCriarParametroInstanciaNaoCondition    
-    Properties:
-      GroupDescription: Grupo de seguranca (Security group) do RDS.
-      GroupName: !Join ['', [!Ref CMJDBInstanceIdentifier, SecurityGroup]]
-      VpcId: !Ref CMJVpcId
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 3306
-          ToPort: 3306
-          CidrIp: !Ref CMJCidrIpPermitido #exemplo 1111.2222.3333.4444/32 
-      SecurityGroupEgress:
-        - IpProtocol: tcp
-          FromPort: 3306
-          ToPort: 3306
-          CidrIp: 0.0.0.0/0
-  CMJRDSDBInstance:
-    Type: 'AWS::RDS::DBInstance'
-    Condition: CMJCriarParametroInstanciaNaoCondition    
-    Properties:
-      DBInstanceIdentifier: !Ref CMJDBInstanceIdentifier
-      DBName: !Ref DBName
-      DBInstanceClass: !Ref DBInstanceClass
-      StorageType : 'gp2'
-      AllocatedStorage: !Ref DBAllocatedStorage
-      Engine: MySQL
-      EngineVersion: "8.0.28" 
-      MasterUsername: !Ref DBUsername
-      MasterUserPassword: !Ref DBPassword
-      MonitoringInterval: '0'
-      PubliclyAccessible : 'true'
-      VPCSecurityGroups : 
-        - !Ref CMJRDSSecurityGroup
-      BackupRetentionPeriod: '0'     
-Outputs:
-  CMJRDSSecurityGroupOutputs:
-    Condition: CMJCriarParametroInstanciaNaoCondition    
-    Description: Seurity group do rds
-    Value: !Ref CMJRDSSecurityGroup
-    Export:
-      Name: CMJRDSSecurityGroupOut 
-  CMJRDSDBInstanceOutputs:
-    Condition: CMJCriarParametroInstanciaNaoCondition    
-    Description: Seurity group do rds
-    Value: !Ref CMJRDSDBInstance
-    Export:
-      Name: CMJRDSDBInstanceOut 

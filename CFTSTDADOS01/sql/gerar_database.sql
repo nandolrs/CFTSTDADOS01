@@ -2,7 +2,7 @@
 
 -- drop schema negritando;
 -- create schema negritando;
-use negritando;
+use dbcftreino; -- negritando, dbcftreino
 
 /*
 *****************************************************************************
