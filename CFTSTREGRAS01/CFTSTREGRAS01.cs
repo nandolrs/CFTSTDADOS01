@@ -36,6 +36,14 @@ namespace Negritando.Rule
             entidade.incluir();
         }
 
+        public Negritando.Model.Usuario Listar()
+        {
+            Negritando.Model.Usuario entidade = new Model.Usuario();
+
+            entidade.listar();
+
+            return entidade;
+        }
         public Negritando.Model.Usuario Consultar(Negritando.Model.Usuario entidade)
         {
 

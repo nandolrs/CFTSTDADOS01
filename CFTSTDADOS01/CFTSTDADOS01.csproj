@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CFCOREDADOSBASE" Version="1.0.3" />
+    <PackageReference Include="CFCOREAWS" Version="1.0.0" />
+    <PackageReference Include="CFCOREDADOSBASE" Version="1.0.5" />
   </ItemGroup>
 
 </Project>

@@ -4,14 +4,10 @@ namespace Negritando.Controllers
 {
     public class UsuarioController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         [HttpGet]
         [Route("api/")]
-        public string Consultar()
+        public string EuToVivo()
         {
 
             Negritando.Rule.Usuario regras = new Rule.Usuario();
@@ -19,6 +15,45 @@ namespace Negritando.Controllers
             string v = regras.BuscarVersao();
 
             return "eu estou vivo - " + v;
+        }
+
+        [HttpGet]
+        [Route("api/usuarios")]
+        public Negritando.Web.Models.Usuario[] Listar()
+        {
+            Negritando.Web.Models.Usuario[] retorno = new Negritando.Web.Models.Usuario[0];
+
+            try
+            {
+                // consulta
+                //
+
+                Negritando.Rule.Usuario regra = new Rule.Usuario();
+
+                Negritando.Model.Usuario entidadeLista = regra.Listar();
+
+                foreach (Negritando.Model.Usuario e in entidadeLista)
+                {
+                    System.Array.Resize(ref retorno, retorno.Length + 1);
+
+                    retorno[retorno.Length - 1] = new Negritando.Web.Models.Usuario();
+                    retorno[retorno.Length - 1].Codigo = e.codigo;
+                    retorno[retorno.Length - 1].Email = e.Email;
+                    retorno[retorno.Length - 1].Nome = e.Nome;
+                }
+
+                return retorno;
+
+            }
+            catch (cf.erros.Erro ee)
+            {
+                string x = "";
+                return retorno;
+
+            }
+
+
+
         }
 
         [HttpPost]
