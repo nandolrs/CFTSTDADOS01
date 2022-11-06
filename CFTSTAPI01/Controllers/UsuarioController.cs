@@ -17,8 +17,8 @@ namespace Negritando.Controllers
             return "eu estou vivo - " + v;
         }
 
-        [HttpGet]
-        [Route("api/usuarios")]
+        [HttpPost]
+        [Route("api/usuarios/pesquisar")]
         public Negritando.Web.Models.Usuario[] Listar()
         {
             Negritando.Web.Models.Usuario[] retorno = new Negritando.Web.Models.Usuario[0];
@@ -57,7 +57,7 @@ namespace Negritando.Controllers
         }
 
         [HttpPost]
-        [Route("api/usuario/")]
+        [Route("api/usuario")]
         public void Incluir([FromBody] Negritando.Web.Models.Usuario entidadeWeb)
         {
             Negritando.Model.Usuario entidade = new Model.Usuario();
