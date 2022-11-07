@@ -1,0 +1,36 @@
+#
+# pilha : negritando-ecs-api-addIngressECS
+# - diagrama
+# client
+# 	security group 1 (filtro = in, tcp, 80, *ip)
+# 		load balance
+# 			security group (filtro = in, tcp, 80, security group 1)
+# 				task/servico/container
+# - dependencias
+#   arn:aws:iam::{conta}:policy/cmj-parameters-dev
+AWSTemplateFormatVersion: 2010-09-09
+Description: Template que permite acesso do ECS/SecurityGroup ao RDS/SecurityGroup. Autor Fernando Rodrigues
+Parameters:
+  CMJVpcId:
+    Type: AWS::EC2::VPC::Id
+Resources:
+  CMJSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      VpcId: !Ref CMJVpcId
+      GroupDescription: Security group allowing ingress for security scanners
+  CMJContainerSecurityGroupIngress:        
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      #CidrIp: String
+      #CidrIpv6: String
+      Description: String
+      FromPort: 3306
+      #GroupId: !Ref CMJRDSSecurityGroupOut
+      GroupName: !ImportValue CCMJContainerSecurityGroupOut 
+      IpProtocol: tcp
+      #SourcePrefixListId: String
+      SourceSecurityGroupId: !ImportValue CMJRDSSecurityGroupOut
+      #SourceSecurityGroupName: String
+      #SourceSecurityGroupOwnerId: String
+      #ToPort: 3306
