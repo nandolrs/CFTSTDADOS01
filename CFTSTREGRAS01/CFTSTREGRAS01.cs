@@ -14,7 +14,7 @@ namespace Negritando.Rule
 
 
         }
-        public void Incluir(Negritando.Model.Usuario entidade)
+        public void Incluir(Negritando.Dados.Usuario entidade)
         {
 
 
@@ -36,15 +36,40 @@ namespace Negritando.Rule
             entidade.incluir();
         }
 
-        public Negritando.Model.Usuario Listar()
+        //public Negritando.Model.Usuario Listar()
+        //{
+        //    Negritando.Model.Usuario entidade = new Model.Usuario();
+
+        //    entidade.listar();
+
+        //    return entidade;
+        //}
+
+        //public Negritando.Dados.Usuario Pesquisar(Negritando.Dados.Usuario entidade)
+        //{
+        //    if (entidade.codigo == 0 && entidade.Nome.Length == 0)
+        //    {
+        //        throw new Exception("informe ao menos um dos atributos");
+        //    }
+
+        //    entidade.pesquisar();
+
+        //    return entidade;
+        //}
+
+        public Negritando.Dados.Usuario Pesquisar(Negritando.Dados.Usuario entidade)
         {
-            Negritando.Model.Usuario entidade = new Model.Usuario();
+            //base.Validar(entidade, comum.enumeracoes.CFACAO.pesquisando);
+            //Validar(entidade, comum.enumeracoes.CFACAO.pesquisando);
 
-            entidade.listar();
-
+            entidade.pesquisar();
             return entidade;
         }
-        public Negritando.Model.Usuario Consultar(Negritando.Model.Usuario entidade)
+
+
+
+
+        public Negritando.Dados.Usuario Consultar(Negritando.Dados.Usuario entidade)
         {
 
 
@@ -59,19 +84,9 @@ namespace Negritando.Rule
         }
 
 
-        public Negritando.Model.Usuario Pesquisar(Negritando.Model.Usuario entidade)
-        {
-            if (entidade.codigo == 0 && entidade.Nome.Length == 0)
-            {
-                throw new Exception("informe ao menos um dos atributos");
-            }
 
-            entidade.pesquisar();
 
-            return entidade;
-        }
-
-        public void Excluir(Negritando.Model.Usuario entidade)
+        public void Excluir(Negritando.Dados.Usuario entidade)
         {
             if (entidade.codigo == 0)
             {

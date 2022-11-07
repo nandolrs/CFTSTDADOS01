@@ -1,0 +1,44 @@
+.cartao {
+    /* max-width: 160px; */
+    border-radius: 15px;
+  }
+
+  .foto{
+    max-width: 160px;
+  }
+
+  .foto-mini{
+    max-width: 40px;
+  }
+
+  .gui1 {
+    color: brown;
+  }
+
+  .estilo-botao
+  {
+    width: 100%;
+  }
+
+
+  .alinhar_justificar
+  {
+    text-align: justify;
+  }
+  .alinhar_direita
+  {
+    text-align: right;
+  }
+
+
+  
+  .alinhar_esquerda
+  {
+    text-align: right;
+  }
+
+  .fonte_destaque
+  {
+    font:bold;
+
+  }

@@ -1,7 +1,7 @@
 ﻿using System;
 using cf.dados;
 
-namespace Negritando.Model
+namespace Negritando.Dados
 {
     public class Basico : cf.dados.Entidade
     {

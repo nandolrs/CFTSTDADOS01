@@ -466,3 +466,10 @@ Outputs:
     Value: !Ref CMJLoadBalancer
     Export:
       Name: CMJLoadBalancerOut 
+  CMJContainerSecurityGroupOutputs:
+    Description: Security group do ECS container
+    Value: !Ref CMJContainerSecurityGroup
+    Export:
+      Name: CCMJContainerSecurityGroupOut       
+
+      
