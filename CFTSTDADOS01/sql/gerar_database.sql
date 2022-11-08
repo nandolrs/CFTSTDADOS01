@@ -4,9 +4,11 @@
 -- create schema negritando;						-- negritando, dbcftreino
 
 /*
-SELECT * FROM dbcftreino.Usuario;
 
 SELECT count(1) qtde FROM dbcftreino.Usuario;
+
+SELECT * FROM dbcftreino.Usuario;
+
 
 --  delete from  dbcftreino.Usuario;
 
