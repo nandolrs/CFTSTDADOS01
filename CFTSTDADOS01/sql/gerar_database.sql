@@ -1,6 +1,7 @@
 -- cria o banco de dados 
 
 -- drop schema negritando;							-- negritando, dbcftreino
+
 -- create schema negritando;						-- negritando, dbcftreino
 
 /*
@@ -8,7 +9,6 @@
 SELECT count(1) qtde FROM dbcftreino.Usuario;
 
 SELECT * FROM dbcftreino.Usuario;
-
 
 --  delete from  dbcftreino.Usuario;
 
