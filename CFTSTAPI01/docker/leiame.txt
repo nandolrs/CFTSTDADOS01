@@ -1,6 +1,6 @@
 - Gerar imagem API
 					
-  docker build -f ..\Dockerfile -t cftstapi-image ..\.
+  docker build -f ..\Dockerfile -t cftstapi-image ..\..\.
   
   docker images
 				
