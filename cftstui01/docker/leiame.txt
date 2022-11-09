@@ -12,9 +12,9 @@
 		
 - Teste rápido
 		
-  docker run -it --rm -p 3000:3000 --name cftstui-service cftstui-image
+  docker run -it --rm -p 8000:80 --name cftstui-service cftstui-image
 
-  acessar via navegador (chrome, edge, ...) = http://localhost:3000
+  acessar via navegador (chrome, edge, ...) = http://localhost:8000
 
   resposta = tela de pesquisa da aplicação
 
