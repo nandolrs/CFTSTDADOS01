@@ -8,19 +8,21 @@
 
 - Gerar build React
 
-    caminho de partida = C:\Users\073090631\Documents\nando\projetos\CFTSTDADOS01\cftstui01
+    caminho de partida = C:\Users\073090631\Documents\nando\projetos\negritando-treinamento\CFTSTDADOS01\cftstui01
 
-    cd C:\Users\073090631\Documents\nando\projetos\CFTSTDADOS01\cftstui01
+    cd C:\Users\073090631\Documents\nando\projetos\negritando-treinamento\CFTSTDADOS01\cftstui01
+
+    npm install
+
+    npm start
 
     npm run build
 
 - Gerar imagem UI
 
-    depende do docker desktop instalado e rodando
+    caminho de partida =C:\Users\073090631\Documents\nando\projetos\negritando-treinamento\CFTSTDADOS01\cftstui01\build
 
-    caminho de partida = C:\Users\073090631\Documents\nando\projetos\CFTSTDADOS01\cftstui01\build
-
-    cd C:\Users\073090631\Documents\nando\projetos\CFTSTDADOS01\cftstui01\build
+    cd C:\Users\073090631\Documents\nando\projetos\negritando-treinamento\CFTSTDADOS01\cftstui01\build
 
     copy ..\dockerfile
       
@@ -30,9 +32,9 @@
     
 - Teste rápido
 
-    docker run -it --rm -p 3000:3000 --name cftstui-service cftstui-image
+    docker run -it --rm -p 8000:80 --name cftstui-service cftstui-image
 
-    acessar via navegador (chrome, edge, ...) = http://localhost:3000
+    acessar via navegador (chrome, edge, ...) = http://localhost:8000
 
     resposta = tela de pesquisa da aplicação
 
@@ -41,3 +43,5 @@
     docker tag cftstui-image nandolrs/cftstui-image
 
     docker image push nandolrs/cftstui-image
+
+    acessar via navegador (chrome, edge, ...) = https://hub.docker.com/repository/docker/nandolrs/cftstui-image
