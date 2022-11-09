@@ -6,7 +6,7 @@
 
 - Gerar imagem UI
 
-  docker build -f ..\Dockerfile -t cftstui-image ..\.
+  docker build -f ..\Dockerfile -t cftstui-image ..\build\.
   
   docker images
 		
