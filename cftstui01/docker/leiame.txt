@@ -1,5 +1,7 @@
 - Gerar build React
 
+  npm install ..\.
+
   npm run build ..\.
 
 - Gerar imagem UI
