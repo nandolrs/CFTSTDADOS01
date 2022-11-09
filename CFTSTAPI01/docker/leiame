@@ -1,10 +1,18 @@
-	- Gerar imagem API
+  - Dependências
+
+    - docker desktop instalando e rodando
+
+    - um navegador web (chrome, edge, ...)
+
+    - uma conta no docker
+  
+  - Gerar imagem API
 	
 		ativar docker
 	
-		caminho de partida = C:\Users\073090631\Documents\nando\projetos\CFTSTDADOS01
+		caminho de partida = C:\Users\073090631\Documents\nando\projetos\negritando-treinamento\CFTSTDADOS01
 
-        cd C:\Users\073090631\Documents\nando\projetos\CFTSTDADOS01
+        cd C:\Users\073090631\Documents\nando\projetos\negritando-treinamento\CFTSTDADOS01
 			
 		docker build -f CFTSTAPI01\Dockerfile -t cftstapi-image .
 		
