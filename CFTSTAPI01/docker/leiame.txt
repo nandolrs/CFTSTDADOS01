@@ -1,0 +1,33 @@
+- Dependências
+
+    docker desktop instalando e rodando
+
+    um navegador web (chrome, edge, ...)
+
+    uma conta no docker
+
+- Gerar imagem API
+
+    caminho de partida = C:\Users\073090631\Documents\nando\projetos\negritando-treinamento\CFTSTDADOS01
+
+    cd C:\Users\073090631\Documents\nando\projetos\negritando-treinamento\CFTSTDADOS01
+      
+    docker build -f CFTSTAPI01\Dockerfile -t cftstapi-image .
+
+    docker images
+      
+- Teste rápido
+
+    docker run -it --rm -p 8000:80 --name cftstapi-service cftstapi-image
+
+    acessar via navegador (chrome, edge, ...) = http://localhost:8000/api
+
+    resposta = eu estou vivo
+
+- Publicar no Docker
+
+    docker tag cftstapi-image nandolrs/cftstapi-image
+
+    docker image push nandolrs/cftstapi-image
+
+    acessar via navegador (chrome, edge, ..._ = https://hub.docker.com/repository/docker/nandolrs/cftstapi-image
