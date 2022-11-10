@@ -62,6 +62,25 @@ Parameters:
     - hom
     - prd
     - treinamento
+  CMJCriarParametrosPergunta:
+    Default: sim
+    Type: String
+    AllowedValues:
+    - sim
+    - nao
+  CMJAcessoPublicoPergunta:
+    Default: sim
+    Type: String
+    AllowedValues:
+    - sim
+    - nao    
+Conditions:
+  CMJCriarParametrosCondicao: !Equals 
+    - !Ref CMJCriarParametrosPergunta
+    - sim    
+  CMJAcessoPublicoCondicao: !Equals 
+    - !Ref CMJAcessoPublicoPergunta
+    - sim        
 Metadata: 
   AWS::CloudFormation::Interface: 
     ParameterGroups: 
@@ -69,6 +88,8 @@ Metadata:
         Label: 
           default: "Dados da rede e ambiente"
         Parameters: 
+          - CMJCriarParametrosPergunta
+          - CMJAcessoPublicoPergunta          
           - CMJEnviromentName
           - CMJVpcId
           - CMJCidrIpPermitido
@@ -107,54 +128,64 @@ Metadata:
       CMJCidrIpPermitido: 
         default: "IP para acesso publico"    
       CMJEnviromentName: 
-        default: "Ambiente (desenvolvimento/testes/producao/treinamento)"                                                          
+        default: "Ambiente (desenvolvimento/testes/producao/treinamento)"    
+      CMJCriarParametrosPergunta: 
+        default: "Criar parametros?"     
+      CMJAcessoPublicoPergunta: 
+        default: "Permitir acesso publico?"                                                                        
 Resources:
   CMJParametrosServidorNome:
     Type: AWS::SSM::Parameter
+    Condition: CMJCriarParametrosCondicao
     DependsOn: CMJRDSDBInstance
     Properties: 
-      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/servidor/nome']]
+      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/',!Ref CMJDBName,'/servidor/nome']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
-      Value: !GetAtt CMJRDSDBInstance.Endpoint.Address # !Ref CMJDBInstanceEndpoint 
+      Value: !GetAtt CMJRDSDBInstance.Endpoint.Address  
   CMJParametrosServidorPorta:
     Type: AWS::SSM::Parameter
+    Condition: CMJCriarParametrosCondicao
     DependsOn: CMJRDSDBInstance
     Properties: 
-      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/servidor/porta']]
+      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/',!Ref CMJDBName,'/servidor/porta']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
       Value:  3306   
   CMJParametrosUsuarioBanco:
     Type: AWS::SSM::Parameter
+    Condition: CMJCriarParametrosCondicao
     Properties: 
-      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/usuario/banco']]
+      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/',!Ref CMJDBName,'/usuario/banco']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
       Value:  !Ref CMJDBName 
   CMJParametrosUsuarioNome:
     Type: AWS::SSM::Parameter
+    Condition: CMJCriarParametrosCondicao
     Properties: 
-      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/usuario/nome']]
+      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/',!Ref CMJDBName,'/usuario/nome']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
       Value:  !Ref CMJMasterUsername                      
   CMJParametrosUsuarioSenha:
     Type: AWS::SSM::Parameter
+    Condition: CMJCriarParametrosCondicao
     Properties: 
-      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/usuario/senha']]
+      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/',!Ref CMJDBName,'/usuario/senha']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
       Value:  !Ref CMJMasterUserPassword          
   CMJParametrosUsuarioTimeout:
     Type: AWS::SSM::Parameter
+    Condition: CMJCriarParametrosCondicao
     Properties: 
-      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/usuario/time-out']]
+      Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/',!Ref CMJDBName,'/usuario/time-out']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
@@ -178,7 +209,7 @@ Resources:
   CMJRDSDBInstance:
     Type: 'AWS::RDS::DBInstance'
     Properties:
-      DBInstanceIdentifier: !Ref CMJDBInstanceIdentifier
+      DBInstanceIdentifier: !Join ['', [!Ref CMJDBInstanceIdentifier, DBInstance]] #  !Ref CMJDBInstanceIdentifier
       DBName: !Ref CMJDBName
       DBInstanceClass: !Ref CMJDBInstanceClass
       StorageType : 'gp2'
@@ -188,24 +219,24 @@ Resources:
       MasterUsername: !Ref CMJMasterUsername
       MasterUserPassword: !Ref CMJMasterUserPassword
       MonitoringInterval: '0'
-      PubliclyAccessible : 'true'
+      PubliclyAccessible :   !If [CMJAcessoPublicoCondicao, true, false] # 'true'
       VPCSecurityGroups : 
         - !Ref CMJRDSSecurityGroup
       BackupRetentionPeriod: '0'     
 Outputs:
   CMJRDSSecurityGroupOutputs:
-    Description: Seurity group do rds
+    Description: Security group
     Value: !Ref CMJRDSSecurityGroup
     Export:
-      Name: CMJRDSSecurityGroupOut 
+      Name: !Join ['', [!Ref CMJDBInstanceIdentifier, SecurityGroup,'Out']] # CMJRDSSecurityGroupOut 
   CMJRDSDBInstanceOutputs:
-    Description: Security group do rds
+    Description: Instancia
     Value: !Ref CMJRDSDBInstance
     Export:
-      Name: CMJRDSDBInstanceOut 
+      Name: !Join ['', [!Ref CMJDBInstanceIdentifier, DBInstance,'Out']] # CMJRDSDBInstanceOut 
   CMJRDSDBInstanceEndpointAddressOutputs:
-    Description: Security group do rds
+    Description: Endpoint
     Value: !GetAtt CMJRDSDBInstance.Endpoint.Address
     Export:
-      Name:  CMJRDSDBInstanceEndpointAddressOut
+      Name:  !Join ['', [!Ref CMJDBInstanceIdentifier, DBInstance,'EndpointAddress','Out']] # CMJRDSDBInstanceEndpointAddressOut  
    

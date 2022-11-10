@@ -74,16 +74,38 @@ namespace Negritando.Controllers
 
         [HttpPost]
         [Route("api/usuario")]
-        public void Incluir([FromBody] Negritando.Web.Models.Usuario entidadeWeb)
+        public Negritando.Web.Models.UsuarioResponse Incluir([FromBody] Negritando.Web.Models.Usuario webEntidade)
         {
-            Negritando.Dados.Usuario entidade = new Negritando.Dados.Usuario();
- 
-            entidade.Email = entidadeWeb.Email;
-            entidade.Nome = entidadeWeb.Nome;
-            entidade.Senha = entidadeWeb.Senha;
-   
-            Negritando.Rule.Usuario regra = new Rule.Usuario();
-            regra.Incluir(entidade);
+            try
+            {
+                Negritando.Dados.Usuario entidade = new Negritando.Dados.Usuario();
+
+                entidade.Email = webEntidade.Email;
+                entidade.Nome = webEntidade.Nome;
+                entidade.Senha = webEntidade.Senha;
+
+                Negritando.Rule.Usuario regra = new Rule.Usuario();
+                regra.Incluir(entidade);
+
+                return new Negritando.Web.Models.UsuarioResponse(webEntidade, null, null);
+
+            }
+
+
+            catch (cf.erros.Erro ee)
+            {
+                cf.erros.ErroBase erroBase = new cf.erros.ErroBase(ee);
+                Negritando.Web.Models.UsuarioResponse resposta = new Negritando.Web.Models.UsuarioResponse(null, erroBase, null);
+                return resposta;
+
+            }
+
+            catch (Exception ee)
+            {
+                cf.erros.ErroBase erroBase = new cf.erros.ErroBase(ee);
+                Negritando.Web.Models.UsuarioResponse resposta = new Negritando.Web.Models.UsuarioResponse(null, erroBase, null);
+                return resposta;
+            }
         }
 
         [HttpGet]
