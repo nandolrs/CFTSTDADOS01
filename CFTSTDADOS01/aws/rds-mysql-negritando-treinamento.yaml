@@ -1,6 +1,6 @@
 #
 # pilha : negritando-rds-mysql
-
+#
 AWSTemplateFormatVersion: 2010-09-09
 Description: Template que cria uma instancia mysql. Autor Fernando Rodrigues
 Parameters:
@@ -11,17 +11,8 @@ Parameters:
     MinLength: '1'
     MaxLength: '63'
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: 
-      Precisa iniciar com letras e não deve terminar com um ou mais hifens
-  CMJDBInstanceEndpoint:
-    Default: ... informe nome.dominio ...
-    Description: Endpoint da instancia
-    Type: String
-    #MinLength: '1'
-    #MaxLength: '63'
-    #AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
-    ConstraintDescription: Precisa iniciar com letras e nao deve terminar com um ou mais hifens      
-  DBName:
+    ConstraintDescription: Precisa iniciar com letras e não deve terminar com um ou mais hifens    
+  CMJDBName:
     Default: dbcftreino
     Description: Nome da base de dados
     Type: String
@@ -29,19 +20,19 @@ Parameters:
     MaxLength: '64'
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
     ConstraintDescription: Deve comecar com uma letra e conter somente coracteres alfanumericos.
-  DBInstanceClass:
+  CMJDBInstanceClass:
     Default: db.t3.micro
     Description: Classe da instancia DB
     Type: String
     ConstraintDescription: Selecione um tipo valido de instancia DB.
-  DBAllocatedStorage:
+  CMJAllocatedStorage:
     Default: '20'
     Description: Tamanho da base de dados (GiB)
     Type: Number
     MinValue: '20'
     MaxValue: '65536'
     ConstraintDescription: Deve estar entre 20 e 65536 GiB.
-  DBUsername:
+  CMJMasterUsername:
     Default: dandaraQuilombo
     Description: Nome do usuario para acessar a base de dados  MySQL.
     Type: String
@@ -49,7 +40,7 @@ Parameters:
     MaxLength: '16'
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
     ConstraintDescription: Deve comecar com uma letra e conter somente caracteres.
-  DBPassword:
+  CMJMasterUserPassword:
     NoEcho: 'true'
     Description: Senha de acesso da base de dados MySQL.
     Type: String
@@ -71,19 +62,6 @@ Parameters:
     - hom
     - prd
     - treinamento
-  CMJDBInstanceEndpointCriarParametro:
-    Default: nao
-    Type: String
-    AllowedValues:
-    - sim
-    - nao
-Conditions:
-  CMJCriarParametroInstanciaSimCondition: !Equals
-    - !Ref CMJDBInstanceEndpointCriarParametro
-    - sim
-  CMJCriarParametroInstanciaNaoCondition: !Equals
-    - !Ref CMJDBInstanceEndpointCriarParametro
-    - nao
 Metadata: 
   AWS::CloudFormation::Interface: 
     ParameterGroups: 
@@ -94,35 +72,33 @@ Metadata:
           - CMJEnviromentName
           - CMJVpcId
           - CMJCidrIpPermitido
-          - CMJDBInstanceEndpointCriarParametro
-          - CMJDBInstanceEndpoint
       - 
         Label: 
           default: "Dados do servidor"
         Parameters: 
           - CMJDBInstanceIdentifier
-          - DBName
-          - DBInstanceClass
-          - DBAllocatedStorage
+          - CMJDBName
+          - CMJDBInstanceClass
+          - CMJAllocatedStorage
       - 
         Label: 
           default: "Dados do usuario"
         Parameters: 
-          - DBUsername
-          - DBPassword
+          - CMJMasterUsername
+          - CMJMasterUserPassword
           - CMJParametrosUsuarioTimeout
     ParameterLabels: 
       CMJDBInstanceIdentifier: 
         default: "Nome da instancia"      
-      DBName: 
+      CMJDBName: 
         default: "Nome da base de dados"
-      DBInstanceClass: 
+      CMJDBInstanceClass: 
         default: "Classe da instancia DB"     
-      DBAllocatedStorage: 
+      CMJAllocatedStorage: 
         default: "Tamanho do armazenamento"             
-      DBUsername: 
+      CMJMasterUsername: 
         default: "Nome do usuario"      
-      DBPassword: 
+      CMJMasterUserPassword: 
         default: "Senha"
       CMJParametrosUsuarioTimeout: 
         default: "Prazo para conexao (time-out)"     
@@ -131,24 +107,20 @@ Metadata:
       CMJCidrIpPermitido: 
         default: "IP para acesso publico"    
       CMJEnviromentName: 
-        default: "Ambiente (desenvolvimento/testes/producao/treinamento)"
-      CMJDBInstanceEndpointCriarParametro: 
-        default: "Criar parametro da instancia?"                                                               
+        default: "Ambiente (desenvolvimento/testes/producao/treinamento)"                                                          
 Resources:
   CMJParametrosServidorNome:
     Type: AWS::SSM::Parameter
-    #DependsOn: CMJRDSDBInstance
-    Condition: CMJCriarParametroInstanciaSimCondition    
+    DependsOn: CMJRDSDBInstance
     Properties: 
       Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/servidor/nome']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
-      Value: !Ref CMJDBInstanceEndpoint #  !GetAtt CMJRDSDBInstance.DBInstanceIdentifier  #  !Ref CMJDBInstanceIdentifier      
+      Value: !GetAtt CMJRDSDBInstance.Endpoint.Address # !Ref CMJDBInstanceEndpoint 
   CMJParametrosServidorPorta:
     Type: AWS::SSM::Parameter
     DependsOn: CMJRDSDBInstance
-    Condition: CMJCriarParametroInstanciaNaoCondition    
     Properties: 
       Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/servidor/porta']]
       Tags: 
@@ -157,34 +129,30 @@ Resources:
       Value:  3306   
   CMJParametrosUsuarioBanco:
     Type: AWS::SSM::Parameter
-    Condition: CMJCriarParametroInstanciaNaoCondition    
     Properties: 
       Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/usuario/banco']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
-      Value:  !Ref DBName 
+      Value:  !Ref CMJDBName 
   CMJParametrosUsuarioNome:
     Type: AWS::SSM::Parameter
-    Condition: CMJCriarParametroInstanciaNaoCondition    
     Properties: 
       Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/usuario/nome']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
-      Value:  !Ref DBUsername                      
+      Value:  !Ref CMJMasterUsername                      
   CMJParametrosUsuarioSenha:
     Type: AWS::SSM::Parameter
-    Condition: CMJCriarParametroInstanciaNaoCondition    
     Properties: 
       Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/usuario/senha']]
       Tags: 
         Ambiente : !Ref CMJEnviromentName
       Type: String 
-      Value:  !Ref DBPassword          
+      Value:  !Ref CMJMasterUserPassword          
   CMJParametrosUsuarioTimeout:
     Type: AWS::SSM::Parameter
-    Condition: CMJCriarParametroInstanciaNaoCondition    
     Properties: 
       Name:  !Join ['', ['/cmjw/', !Ref CMJEnviromentName ,'/usuario/time-out']]
       Tags: 
@@ -193,7 +161,6 @@ Resources:
       Value:  360000  
   CMJRDSSecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    Condition: CMJCriarParametroInstanciaNaoCondition    
     Properties:
       GroupDescription: Grupo de seguranca (Security group) do RDS.
       GroupName: !Join ['', [!Ref CMJDBInstanceIdentifier, SecurityGroup]]
@@ -210,17 +177,16 @@ Resources:
           CidrIp: 0.0.0.0/0
   CMJRDSDBInstance:
     Type: 'AWS::RDS::DBInstance'
-    Condition: CMJCriarParametroInstanciaNaoCondition    
     Properties:
       DBInstanceIdentifier: !Ref CMJDBInstanceIdentifier
-      DBName: !Ref DBName
-      DBInstanceClass: !Ref DBInstanceClass
+      DBName: !Ref CMJDBName
+      DBInstanceClass: !Ref CMJDBInstanceClass
       StorageType : 'gp2'
-      AllocatedStorage: !Ref DBAllocatedStorage
+      AllocatedStorage: !Ref CMJAllocatedStorage
       Engine: MySQL
       EngineVersion: "8.0.28" 
-      MasterUsername: !Ref DBUsername
-      MasterUserPassword: !Ref DBPassword
+      MasterUsername: !Ref CMJMasterUsername
+      MasterUserPassword: !Ref CMJMasterUserPassword
       MonitoringInterval: '0'
       PubliclyAccessible : 'true'
       VPCSecurityGroups : 
@@ -228,14 +194,18 @@ Resources:
       BackupRetentionPeriod: '0'     
 Outputs:
   CMJRDSSecurityGroupOutputs:
-    Condition: CMJCriarParametroInstanciaNaoCondition    
     Description: Seurity group do rds
     Value: !Ref CMJRDSSecurityGroup
     Export:
       Name: CMJRDSSecurityGroupOut 
   CMJRDSDBInstanceOutputs:
-    Condition: CMJCriarParametroInstanciaNaoCondition    
-    Description: Seurity group do rds
+    Description: Security group do rds
     Value: !Ref CMJRDSDBInstance
     Export:
       Name: CMJRDSDBInstanceOut 
+  CMJRDSDBInstanceEndpointAddressOutputs:
+    Description: Security group do rds
+    Value: !GetAtt CMJRDSDBInstance.Endpoint.Address
+    Export:
+      Name:  CMJRDSDBInstanceEndpointAddressOut
+   
