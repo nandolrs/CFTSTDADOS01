@@ -29,7 +29,7 @@ namespace CFTSTAPI
         {
             services.AddCors(c => { c.AddPolicy("AllowAnyOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); });
 
-            services.AddControllers();
+            //services.AddControllers();
             services.AddControllers().AddNewtonsoftJson(options =>
 
                 options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -44,7 +44,7 @@ namespace CFTSTAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 
