@@ -10,7 +10,7 @@ SELECT count(1) qtde FROM dbcftreino.Usuario;
 
 SELECT * FROM dbcftreino.Usuario;
 
---  delete from  dbcftreino.Usuario;
+-- delete from  dbcftreino.Usuario;
 
 */
 use dbcftreino; -- negritando, dbcftreino

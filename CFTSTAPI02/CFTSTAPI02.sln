@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CFTSTAPI02", "CFTSTAPI02.csproj", "{47749357-FF9E-42AF-980A-C8090FA36901}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47749357-FF9E-42AF-980A-C8090FA36901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47749357-FF9E-42AF-980A-C8090FA36901}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47749357-FF9E-42AF-980A-C8090FA36901}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47749357-FF9E-42AF-980A-C8090FA36901}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B24926B7-E25F-4C0A-AEE3-F73EE2E16B40}
+	EndGlobalSection
+EndGlobal
