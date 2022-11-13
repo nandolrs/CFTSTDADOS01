@@ -16,8 +16,8 @@
 
 - Publicar no Docker
 
-  docker tag cftstapi-image nandolrs/cftstapi-image
+  docker tag cftstapi-image nandolrs/cftstapi-image-v1r1
 
-  docker image push nandolrs/cftstapi-image
+  docker image push nandolrs/cftstapi-image-v1r1
 
   acessar via navegador (chrome, edge, ..._ = https://hub.docker.com/repository/docker/nandolrs/cftstapi-image
