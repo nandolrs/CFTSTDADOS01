@@ -362,10 +362,12 @@ Resources:
           Environment :
             - Name: CMJ_AMBIENTE
               Value : !Ref EnviromentName
+            - Name: CMJ_VERSAO
+              Value : v1r-2DOIS     
+            - Name: CMJ_BASE
+              Value : !Ref CMJDBName                              
             - Name: REACT_APP_SERVER_URL
               Value : !Ref EnviromentNameApi   
-            - Name: CMJ_VERSAO
-              Value : v1r-2DOIS                              
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 0539f1a2-9de4-436a-b92b-5c965b0a443a
