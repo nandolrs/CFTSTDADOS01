@@ -8,11 +8,15 @@
 
   docker build -f ..\Dockerfile -t cftstui-image ..\build\.
   
+  docker build -f ..\Dockerfile   --build-arg REACT_APP_SERVER_URL=   -t cftstui-image-env  ..\build\.
+
   docker images
 		
 - Teste rápido
 		
   docker run -it --rm -p 8000:80 --name cftstui-service cftstui-image
+
+  docker run -it --rm -p 8000:80 --env REACT_APP_SERVER_URL=http://negritandoapiloadbalancer-1427225091.sa-east-1.elb.amazonaws.com     --name cftstui-service-env cftstui-image-env
 
   acessar via navegador (chrome, edge, ...) = http://localhost:8000
 
@@ -20,9 +24,8 @@
 
 - Publicar no Docker
 		
-  docker tag cftstui-image nandolrs/cftstui-image
-
+  docker tag cftstui-image nandolrs/cftstui-image-v1r1
 
   acessar docker hub = https://hub.docker.com/r/nandolrs/cftstui-image
 
-  docker image push nandolrs/cftstui-image
+  docker image push nandolrs/cftstui-image-v1r1

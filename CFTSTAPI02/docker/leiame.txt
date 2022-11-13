@@ -2,13 +2,15 @@
 					
   docker build -f ..\Dockerfile -t cftstapi-image ..\..\.
   
+  docker build -f ..\Dockerfile --build-arg CMJ_AMBIENTE= --build-arg CMJ_BASE= --build-arg CMJ_VERSAO=  -t cftstapi-image-env   ..\..\.
+
   docker images
 				
 - Teste rápido
 
   docker run -it --rm -p 8000:80 --name cftstapi-service cftstapi-image
 
-  docker run -it --rm -p 8000:80 --env CMJ_AMBIENTE=treinamento --env CMJ_VERSAO=v1r1 --env CMJ_BASE=dbcftreino  --name cftstapi-service cftstapi-image
+  docker run -it --rm -p 8000:80 --env CMJ_AMBIENTE=treinamento --env CMJ_BASE=dbcftreino --env CMJ_VERSAO=v1r1   --name cftstapi-service-env cftstapi-image-env
 
   acessar via navegador (chrome, edge, ...) = http://localhost:8000/api
 
