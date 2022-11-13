@@ -162,7 +162,7 @@ Metadata:
 
       CMJCertificateArn: 
         default: "Caminho do certificado" 
-
+        
 Resources:
   CMJECSCluster:
     Type: 'AWS::ECS::Cluster'
