@@ -228,15 +228,15 @@ Outputs:
     Description: Security group
     Value: !Ref CMJRDSSecurityGroup
     Export:
-      Name: !Join ['', [!Ref CMJDBInstanceIdentifier, SecurityGroup,'Out']] # CMJRDSSecurityGroupOut 
+      Name: !Join ['', [!Ref CMJDBInstanceIdentifier, SecurityGroup,'Out']]
   CMJRDSDBInstanceOutputs:
     Description: Instancia
     Value: !Ref CMJRDSDBInstance
     Export:
-      Name: !Join ['', [!Ref CMJDBInstanceIdentifier, DBInstance,'Out']] # CMJRDSDBInstanceOut 
+      Name: !Join ['', [!Ref CMJDBInstanceIdentifier, DBInstance,'Out']] 
   CMJRDSDBInstanceEndpointAddressOutputs:
     Description: Endpoint
     Value: !GetAtt CMJRDSDBInstance.Endpoint.Address
     Export:
-      Name:  !Join ['', [!Ref CMJDBInstanceIdentifier, DBInstance,'EndpointAddress','Out']] # CMJRDSDBInstanceEndpointAddressOut  
+      Name:  !Join ['', [!Ref CMJDBInstanceIdentifier, DBInstance,EndpointAddress,'Out']] 
    
