@@ -510,39 +510,34 @@ Resources:
         PredefinedMetricSpecification: 
             PredefinedMetricType: ECSServiceAverageCPUUtilization # ECSServiceAverageCPUUtilization/ECSServiceAverageMemoryUtilization/ ALBRequestCountPerTarget 
         TargetValue: !Ref CMJScalingPolicyTargetValue
-#Outputs:
-#  CMJECSClusterOutputs:
-#    Description: Cluster ecs/fargate
-#    Value: !Ref CMJECSCluster
-#    Export:
-#      Name: !Join  ['', [!Ref CMJClusterName, ECSCluster,'Out']]    
-#  CMJECSIamRoleEcsTasksOutputs:
-#    Description: IamRole task ecs/fargate
-#    Value: !Ref CMJECSIamRoleEcsTasks
-#    Export:
-#      Name: !Join  ['', [!Ref CMJClusterName, ECSIamRoleEcsTasks,'Out']]   
-#  CMJECSIamRoleEcsTasksExecutionOutputs:
-#    Description: IamRole tasks execution ecs/fargate
-#    Value: !Ref CMJECSIamRoleEcsTasksExecution
-#    Export:
-#      Name: !Join  ['', [!Ref CMJClusterName, ECSIamRoleEcsTasksExecution,'Out']] 
-#  CMJLoadBalancerOutputs:
-#    Description: Load balance to use
-#    Value: !Ref CMJLoadBalancer
-#    Export:
-#      Name: !Join ['', [!Ref CMJServiceName, LoadBalancer,'Out']]  
-#  CMJLoadBalancerDNSNameOutputs:
-#    Description: Load balance endpoint
-#    Value: !GetAtt CMJLoadBalancer.DNSName 
-#    Export:
-#      Name:   !Join ['', [!Ref CMJServiceName, LoadBalancerDNSName,'Out']]          
-#  CMJContainerSecurityGroupOutputs:
-#    Description: Security group do ECS container
-#    Value: !Ref CMJContainerSecurityGroup
-#    Export:
-#      Name: !Join ['', [!Ref CMJServiceName, ContainerSecurityGroup,'Out']] 
-             
-
-
-
-      
+Outputs:
+  CMJECSClusterOutputs:
+    Description: Cluster ecs/fargate
+    Value: !Ref CMJECSCluster
+    Export:
+      Name: !Join  ['', [!Ref CMJClusterName, ECSCluster,'Out']]    
+  CMJECSIamRoleEcsTasksOutputs:
+    Description: IamRole task ecs/fargate
+    Value: !Ref CMJECSIamRoleEcsTasks
+    Export:
+      Name: !Join  ['', [!Ref CMJClusterName, ECSIamRoleEcsTasks,'Out']]   
+  CMJECSIamRoleEcsTasksExecutionOutputs:
+    Description: IamRole tasks execution ecs/fargate
+    Value: !Ref CMJECSIamRoleEcsTasksExecution
+    Export:
+      Name: !Join  ['', [!Ref CMJClusterName, ECSIamRoleEcsTasksExecution,'Out']] 
+  CMJLoadBalancerOutputs:
+    Description: Load balance to use
+    Value: !Ref CMJLoadBalancer
+    Export:
+      Name: !Join ['', [!Ref CMJServiceName, LoadBalancer,'Out']]  
+  CMJLoadBalancerDNSNameOutputs:
+    Description: Load balance endpoint
+    Value: !GetAtt CMJLoadBalancer.DNSName 
+    Export:
+      Name:   !Join ['', [!Ref CMJServiceName, LoadBalancerDNSName,'Out']]          
+  CMJContainerSecurityGroupOutputs:
+    Description: Security group do ECS container
+    Value: !Ref CMJContainerSecurityGroup
+    Export:
+      Name: !Join ['', [!Ref CMJServiceName, ContainerSecurityGroup,'Out']]
