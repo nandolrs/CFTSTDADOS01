@@ -99,9 +99,6 @@ Resources:
           Weight: 1
         - CapacityProvider: FARGATE_SPOT
           Weight: 1
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: d635bde5-ab48-41d2-bde6-7164956f6d9b
   CMJECSIamRoleEcsTasks:
     Type: AWS::IAM::Role
     Properties:
@@ -286,9 +283,6 @@ Resources:
               Value : v1r-1UM                            
             - Name: ECS_CONTAINER_STOP_TIMEOUT
               Value : 120s                   
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 0539f1a2-9de4-436a-b92b-5c965b0a443a
     DependsOn:
       - CMJECSCluster
   CMJECSTaskDefinition1:
@@ -322,9 +316,6 @@ Resources:
               Value : v1r-2DOIS    
             - Name: ECS_CONTAINER_STOP_TIMEOUT
               Value : 120s                                           
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 0539f1a2-9de4-436a-b92b-5c965b0a443a
     DependsOn:
       - CMJECSCluster
   CMJECSServiceHTTP:
@@ -351,9 +342,6 @@ Resources:
         - ContainerName: !Ref CMJServiceName # mesmo que ContainerDefinitions.Name
           ContainerPort: !Ref CMJContainerPort
           TargetGroupArn: !Ref CMJTargetGroupHTTP            
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 3066b0fa-3eb0-4c58-9f70-ae9560ac3cf2
     DependsOn:
       - CMJECSCluster    
       - CMJListenerHTTP
