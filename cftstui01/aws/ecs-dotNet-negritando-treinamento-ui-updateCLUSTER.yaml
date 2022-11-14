@@ -82,54 +82,96 @@ Conditions:
   CMJCertificateUsageQuestionNoCondition: !Equals
     - !Ref CMJCertificateUsageQuestion
     - no
+Metadata: 
+  AWS::CloudFormation::Interface: 
+    ParameterGroups: 
+      - 
+        Label: 
+          default: Rede e ambiente
+        Parameters: 
+          - CMJEnviromentName
+          - CMJVpcId
+      - 
+        Label: 
+          default: "Aplicacao"
+        Parameters:
+          - CMJLogGroupName
+      - 
+        Label: 
+          default: "Container"
+        Parameters: 
+          - CMJServiceImage
+          - CMJContainerPort
+          - CMJServiceName
+          - CMJServiceName1   
+      - 
+        Label: 
+          default: "Load balance/auto scaling"
+        Parameters: 
+          - CMJListenerPort
+          - CMJTargetGroupHealthCheckPath
+          - CMJScalableTargetMinCapacity
+          - CMJScalableTargetMaxCapacity
+          - CMJScalingPolicyTargetValue      
+      - 
+        Label: 
+          default: "Rota"
+        Parameters: 
+          - CMJCertificateUsageQuestion
+          - CMJCertificateArn                         
+    ParameterLabels: 
+      CMJVpcId: 
+        default: "Nome da rede"   
+
+      CMJEnviromentName: 
+        default: "Ambiente"
+
+      CMJLogGroupName: 
+        default: "Caminho/nome do log"
+
+      CMJClusterName: 
+        default: "Nome do cluster"   
+
+      CMJDBInstanceIdentifier: 
+        default: "Nome da instancia"     
+
+      CMJDBName: 
+        default: "Nome da base de dados"
+        
+      CMJContainerPort: 
+        default: "Porta"   
+
+      CMJServiceName: 
+        default: "Nome do servico"           
+
+      CMJServiceName1: 
+        default: "Nome do servico-1"           
+
+      CMJServiceCMJServiceImageName1: 
+        default: "Caminho/nome da imagem"   
+
+      CMJListenerPort: 
+        default: "Porta"          
+
+      CMJTargetGroupHealthCheckPath: 
+        default: "Caminho para determinar saude"    
+
+      CMJScalableTargetMinCapacity: 
+        default: "Quantidade minima de instancias"   
+
+      CMJScalingPolicyTargetValue: 
+        default: "Escalar quando CPU ultrapassar percentual"   
+
+      CMJScalableTargetMaxCapacity: 
+        default: "Quantidade maxima de instancias"    
+
+      CMJCertificateUsageQuestion: 
+        default: "Usar certificados?"   
+
+      CMJCertificateArn: 
+        default: "Caminho do certificado"     
+        
 Resources:
-  CMJECSCluster:
-    Type: 'AWS::ECS::Cluster'
-    Properties:
-      ClusterName: cmjUi
-      CapacityProviders:
-        - FARGATE
-        - FARGATE_SPOT
-      DefaultCapacityProviderStrategy:
-        - CapacityProvider: FARGATE
-          Weight: 1
-        - CapacityProvider: FARGATE_SPOT
-          Weight: 1
-  CMJECSIamRoleEcsTasks:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Join ['', [!Ref CMJServiceName, cmjIAMRole-ecs-tasks]] # cmjIAMRole-ecs-tasks
-      AssumeRolePolicyDocument:
-        Statement:
-            - Action: 'sts:AssumeRole'
-              Principal:
-                Service: ecs-tasks.amazonaws.com
-              Effect: Allow
-            - Action: 'sts:AssumeRole'
-              Principal:
-                Service: ssm.amazonaws.com
-              Effect: Allow
-      Policies:
-        - PolicyName: cmjIAMPolicy-ssm-parameter
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Action:
-                  - 'ssm:GetParameter'
-                Resource: !Sub  'arn:aws:ssm:*:${AWS::AccountId}:parameter/*'   
-                Effect: Allow
-  CMJECSIamRoleEcsTasksExecution:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: !Join ['', [!Ref CMJServiceName, cmjIAMRole-ecs-tasks-execution]] # cmjIAMRole-ecs-tasks-execution  duplicou
-      AssumeRolePolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: ecs-tasks.amazonaws.com
-            Action: 'sts:AssumeRole'
-      ManagedPolicyArns:
-        - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
   CMJLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -258,8 +300,8 @@ Resources:
       NetworkMode: awsvpc
       Memory: 4096  # 512 <?>
       Cpu: 512  # 256 <?>
-      ExecutionRoleArn: !Ref CMJECSIamRoleEcsTasksExecution
-      TaskRoleArn : !Ref CMJECSIamRoleEcsTasks
+      ExecutionRoleArn: !ImportValue cmjECSIamRoleEcsTasksExecutionOut # <?> !Ref CMJECSIamRoleEcsTasksExecution
+      TaskRoleArn : !ImportValue cmjECSIamRoleEcsTasksOut # <?> !Ref CMJECSIamRoleEcsTasks
       ContainerDefinitions:
         - Name:  !Ref CMJServiceName
           Image: !Ref CMJServiceImage
@@ -281,8 +323,6 @@ Resources:
               Value : v1r-1UM                            
             - Name: ECS_CONTAINER_STOP_TIMEOUT
               Value : 120s                   
-    DependsOn:
-      - CMJECSCluster
   CMJECSTaskDefinition1:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
@@ -291,8 +331,8 @@ Resources:
       NetworkMode: awsvpc
       Memory: 512 #4096
       Cpu: 256 #512 
-      ExecutionRoleArn: !Ref CMJECSIamRoleEcsTasksExecution
-      TaskRoleArn : !Ref CMJECSIamRoleEcsTasks
+      ExecutionRoleArn: !ImportValue cmjECSIamRoleEcsTasksExecutionOut # <?> !Ref CMJECSIamRoleEcsTasksExecution
+      TaskRoleArn :  !ImportValue cmjECSIamRoleEcsTasksOut # <?>!Ref CMJECSIamRoleEcsTasks
       ContainerDefinitions:
         - Name:  !Ref CMJServiceName1  
           Image: !Ref CMJServiceImage
@@ -314,15 +354,13 @@ Resources:
               Value : v1r-2DOIS    
             - Name: ECS_CONTAINER_STOP_TIMEOUT
               Value : 120s                                           
-    DependsOn:
-      - CMJECSCluster
   CMJECSServiceHTTP:
     Type: 'AWS::ECS::Service'
     Properties:
       ServiceName: !Ref CMJServiceName
       LaunchType : FARGATE
       TaskDefinition : !Ref CMJECSTaskDefinition
-      Cluster : !Ref CMJECSCluster   
+      Cluster : !ImportValue cmjECSClusterOut # <?> !Ref CMJECSCluster   
       DesiredCount : 2
       DeploymentConfiguration :
         MinimumHealthyPercent : 100
@@ -341,7 +379,6 @@ Resources:
           ContainerPort: !Ref CMJContainerPort
           TargetGroupArn: !Ref CMJTargetGroupHTTP            
     DependsOn:
-      - CMJECSCluster    
       - CMJListenerHTTP
       - CMJTargetGroupHTTP  
   CMJECSServiceHTTP1:             # <?> ta dando erro aleatorio aqui
@@ -350,7 +387,7 @@ Resources:
       ServiceName: !Ref CMJServiceName1 # ServiceName
       LaunchType : FARGATE
       TaskDefinition : !Ref CMJECSTaskDefinition1
-      Cluster : !Ref CMJECSCluster   
+      Cluster : !ImportValue cmjECSClusterOut  # <?> !Ref CMJECSCluster   
       DesiredCount : 2
       DeploymentConfiguration :
         MinimumHealthyPercent : 100
@@ -369,7 +406,6 @@ Resources:
           ContainerPort: !Ref CMJContainerPort
           TargetGroupArn: !Ref CMJTargetGroupHTTP1            
     DependsOn:
-      - CMJECSCluster    
       - CMJListenerHTTP           
       - CMJTargetGroupHTTP1  
   CMJScalableTarget:
@@ -377,7 +413,7 @@ Resources:
     Properties: 
       MinCapacity: !Ref CMJScalableTargetMinCapacity
       MaxCapacity: !Ref CMJScalableTargetMaxCapacity
-      ResourceId: !Join ['/', [service, !Ref CMJECSCluster, !Ref CMJServiceName ]] 
+      ResourceId:  !Join ['/', [service, !ImportValue cmjECSClusterOut, !Ref CMJServiceName ]]  # <?> !Join ['/', [service, !Ref CMJECSCluster, !Ref CMJServiceName ]] 
       RoleARN: 
         Fn::Sub: 'arn:aws:iam::${AWS::AccountId}:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService'
       ScalableDimension: 'ecs:service:DesiredCount' 

@@ -16,7 +16,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="aws-url" elementType="Argument">
             <stringProp name="Argument.name">aws-url</stringProp>
-            <stringProp name="Argument.value">negritandoapiloadbalancer-1427225091.sa-east-1.elb.amazonaws.com</stringProp>
+            <stringProp name="Argument.value">negritandoapiloadbalancer-63231391.sa-east-1.elb.amazonaws.com</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="local-url" elementType="Argument">
@@ -839,8 +839,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">30</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">30</stringProp>
+        <stringProp name="ThreadGroup.num_threads">60</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">60</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
