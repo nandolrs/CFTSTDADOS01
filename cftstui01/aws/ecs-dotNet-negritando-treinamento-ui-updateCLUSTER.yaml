@@ -8,6 +8,7 @@
 # 				task/servico/container
 # - dependencias
 #   arn:aws:iam::{conta}:policy/cmjUi-parameters-dev
+# erro CMJECSServiceHTTP1   negritandoUi1TargetGroup
 
 
 AWSTemplateFormatVersion: 2010-09-09
@@ -229,6 +230,8 @@ Resources:
           Value: 60 # padrao e 300
       TargetType: ip
       VpcId: !Ref CMJVpcId
+    DependsOn:
+      - CMJLoadBalancer           
   CMJTargetGroupHTTP1:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -245,7 +248,9 @@ Resources:
         - Key: deregistration_delay.timeout_seconds
           Value: 60 # padrao e 300
       TargetType: ip
-      VpcId: !Ref CMJVpcId        
+      VpcId: !Ref CMJVpcId    
+    DependsOn:
+      - CMJLoadBalancer               
   CMJListenerHTTP:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Condition:  CMJCertificateUsageQuestionNoCondition
@@ -318,7 +323,7 @@ Resources:
             - Name: CMJ_AMBIENTE
               Value : !Ref CMJEnviromentName
             - Name: REACT_APP_SERVER_URL
-              Value : !ImportValue  negritandoApiLoadBalancerOut # <?> !Ref CMJApiUrl 
+              Value : !ImportValue  negritandoApiLoadBalancerDNSNameOut # <?> !Ref CMJApiUrl 
             - Name: CMJ_VERSAO
               Value : v1r-1UM                            
             - Name: ECS_CONTAINER_STOP_TIMEOUT

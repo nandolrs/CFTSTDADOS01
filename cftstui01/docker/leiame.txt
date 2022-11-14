@@ -24,6 +24,17 @@
 		
   docker tag cftstui-image nandolrs/cftstui-image
 
+  docker image push nandolrs/cftstui-image
+
   acessar docker hub = https://hub.docker.com/r/nandolrs/cftstui-image
 
-  docker image push nandolrs/cftstui-image
+- Publicar no Docker v1r1
+
+  docker tag cftstui-image nandolrs/cftstui-image-v1r1
+
+  docker image push nandolrs/cftstui-image-v1r1
+
+
+
+
+
