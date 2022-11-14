@@ -13,6 +13,9 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Template que cria uma instancia ecs/fargate. Autor Fernando Rodrigues
 Parameters:
+  CMJClusterName:
+    Type: String
+    Default: cmj  
   CMJServiceName:
     Type: String
     Default: negritandoApi  
@@ -83,6 +86,14 @@ Parameters:
     MaxLength: '64'
     AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
     ConstraintDescription: Deve comecar com uma letra e conter somente coracteres alfanumericos.
+  CMJDBInstanceIdentifier:
+    Default: dbnegritando
+    Description: Nome da instancia
+    Type: String
+    MinLength: '1'
+    MaxLength: '63'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: Precisa iniciar com letras e não deve terminar com um ou mais hifens    
 Conditions:
   CMJCertificateUsageQuestionCondition: !Equals
     - !Ref CMJCertificateUsageQuestion
@@ -97,12 +108,14 @@ Metadata:
         Label: 
           default: Rede e ambiente
         Parameters: 
+          - CMJEnviromentName
           - CMJVpcId
       - 
         Label: 
           default: "Aplicacao"
-        Parameters: 
-          - CMJEnviromentName
+        Parameters:
+          - CMJClusterName 
+          - CMJDBInstanceIdentifier
           - CMJDBName
           - CMJLogGroupName
       - 
@@ -120,8 +133,8 @@ Metadata:
           - CMJListenerPort
           - CMJTargetGroupHealthCheckPath
           - CMJScalableTargetMinCapacity
-          - CMJScalingPolicyTargetValue      
           - CMJScalableTargetMaxCapacity
+          - CMJScalingPolicyTargetValue      
       - 
         Label: 
           default: "Rota"
@@ -138,6 +151,12 @@ Metadata:
       CMJLogGroupName: 
         default: "Caminho/nome do log"
 
+      CMJClusterName: 
+        default: "Nome do cluster"   
+
+      CMJDBInstanceIdentifier: 
+        default: "Nome da instancia"     
+
       CMJDBName: 
         default: "Nome da base de dados"
         
@@ -146,7 +165,6 @@ Metadata:
 
       CMJServiceName: 
         default: "Nome do servico"           
-
 
       CMJServiceName1: 
         default: "Nome do servico-1"           
@@ -164,7 +182,7 @@ Metadata:
         default: "Quantidade minima de instancias"   
 
       CMJScalingPolicyTargetValue: 
-        default: "Quantidade desejavel"   
+        default: "Escalar quando CPU ultrapassar percentual"   
 
       CMJScalableTargetMaxCapacity: 
         default: "Quantidade maxima de instancias"    
@@ -178,7 +196,7 @@ Resources:
   CMJECSCluster:
     Type: 'AWS::ECS::Cluster'
     Properties:
-      ClusterName: cmj
+      ClusterName:   !Join  ['', [!Ref CMJClusterName, ECSCluster]]     
       CapacityProviders:
         - FARGATE
         - FARGATE_SPOT
@@ -190,7 +208,7 @@ Resources:
   CMJECSIamRoleEcsTasks:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: cmjIAMRole-ecs-tasks
+      RoleName: !Join  ['', [!Ref CMJClusterName, ECSIamRoleEcsTasks]]  # cmjIAMRole-ecs-tasks
       AssumeRolePolicyDocument:
         Statement:
             - Action: 'sts:AssumeRole'
@@ -213,7 +231,7 @@ Resources:
   CMJECSIamRoleEcsTasksExecution:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: cmjIAMRole-ecs-tasks-execution
+      RoleName: !Join  ['', [!Ref CMJClusterName, ECSIamRoleEcsTasksExecution]]  #  cmjIAMRole-ecs-tasks-execution
       AssumeRolePolicyDocument:
         Statement:
           - Effect: Allow
@@ -235,11 +253,23 @@ Resources:
         - IpProtocol: tcp
           FromPort: !Ref CMJContainerPort
           ToPort: !Ref CMJContainerPort
-          SourceSecurityGroupId: !Ref CMJLoadBalancerSecurityGroup      
+          SourceSecurityGroupId: !Ref CMJLoadBalancerSecurityGroup     
+  CMJContainerSecurityGroupIngress:        
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties: 
+      Description: String
+      FromPort: 3306
+      ToPort: 3306
+      # <?>
+      GroupId: !ImportValue dbnegritandoSecurityGroupOut        
+      #GroupId: Fn::ImportValue !Join ['', [!Ref CMJDBInstanceIdentifier, SecurityGroup,'Out']]
+      IpProtocol: tcp
+      SourceSecurityGroupId: !Ref CMJContainerSecurityGroup
   CMJLoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Join ['', [!Ref CMJServiceName, CMJLoadBalancerSecurityGroup]]
+      GroupDescription: Grupo de seguranca (Security group) do Load Balance.
+      #GroupName: !Join ['', [!Ref CMJServiceName, LoadBalancerSecurityGroup]]
       VpcId: !Ref CMJVpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
@@ -278,7 +308,7 @@ Resources:
         - Key: deregistration_delay.timeout_seconds
           Value: 60 # padrao e 300
       TargetType: ip
-      VpcId: !Ref CMJVpcId
+      VpcId: !Ref CMJVpcId      
   CMJTargetGroupHTTP1:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -288,17 +318,17 @@ Resources:
       HealthCheckTimeoutSeconds: 5
       UnhealthyThresholdCount: 2
       HealthyThresholdCount: 2
-      Name: !Join ['', [!Ref CMJServiceName, TargetGroup,'1']]
+      Name: !Join ['', [!Ref CMJServiceName1, TargetGroup]] # , '1'
       Port: !Ref CMJContainerPort
       Protocol: HTTP
       TargetGroupAttributes:
         - Key: deregistration_delay.timeout_seconds
           Value: 60 # padrao e 300
       TargetType: ip
-      VpcId: !Ref CMJVpcId        
+      VpcId: !Ref CMJVpcId      
   CMJListenerHTTP:
-    Condition:  CMJCertificateUsageQuestionNoCondition
     Type: AWS::ElasticLoadBalancingV2::Listener
+    Condition:  CMJCertificateUsageQuestionNoCondition
     Properties:
       DefaultActions:
         - TargetGroupArn: !Ref CMJTargetGroupHTTP # ouve HTTPS, mas entrega HTTP para o servico
@@ -306,7 +336,7 @@ Resources:
       LoadBalancerArn: !Ref CMJLoadBalancer
       Port: !Ref CMJListenerPort
       Protocol: HTTP
-  ListenerRuleHTTP:
+  CMJListenerRuleHTTP:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties: 
       Actions: 
@@ -323,7 +353,7 @@ Resources:
                 Value: 1
       ListenerArn: !Ref CMJListenerHTTP
       Priority: 1      
-  ListenerRuleHTTP1:
+  CMJListenerRuleHTTP1:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties: 
       Actions: 
@@ -369,9 +399,6 @@ Resources:
               Value : v1r-1UM    
             - Name: CMJ_BASE
               Value : !Ref CMJDBName                  
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 0539f1a2-9de4-436a-b92b-5c965b0a443a
     DependsOn:
       - CMJECSCluster
   CMJECSTaskDefinition1:
@@ -433,10 +460,10 @@ Resources:
       - CMJECSCluster    
       - CMJListenerHTTP
       - CMJTargetGroupHTTP  
-  CMJECSServiceHTTP1:       # <?> ta dando erro aqui aleatoriamente
+  CMJECSServiceHTTP1:             # <?> ta dando erro aleatorio aqui
     Type: 'AWS::ECS::Service'
     Properties:
-      ServiceName: !Ref CMJServiceName1 
+      ServiceName: !Ref CMJServiceName1 # ServiceName
       LaunchType : FARGATE
       TaskDefinition : !Ref CMJECSTaskDefinition1
       Cluster : !Ref CMJECSCluster   
@@ -483,37 +510,39 @@ Resources:
         PredefinedMetricSpecification: 
             PredefinedMetricType: ECSServiceAverageCPUUtilization # ECSServiceAverageCPUUtilization/ECSServiceAverageMemoryUtilization/ ALBRequestCountPerTarget 
         TargetValue: !Ref CMJScalingPolicyTargetValue
-Outputs:
-  CMJECSClusterOutputs:
-    Description: Cluster ecs/fargate
-    Value: !Ref CMJECSCluster
-    Export:
-      Name: CMJECSClusterOut 
-  CMJECSIamRoleEcsTasksOutputs:
-    Description: IamRole task ecs/fargate
-    Value: !Ref CMJECSIamRoleEcsTasks
-    Export:
-      Name: CMJECSIamRoleEcsTasksOut    
-  CMJECSIamRoleEcsTasksExecutionOutputs:
-    Description: IamRole tasks execution ecs/fargate
-    Value: !Ref CMJECSIamRoleEcsTasksExecution
-    Export:
-      Name: CMJECSIamRoleEcsTasksExecutionOut          
-  CMJLoadBalancerOutputs:
-    Description: Load balance to use
-    Value: !Ref CMJLoadBalancer
-    Export:
-      Name: CMJLoadBalancerOut 
-  CMJContainerSecurityGroupOutputs:
-    Description: Security group do ECS container
-    Value: !Ref CMJContainerSecurityGroup
-    Export:
-      Name: CCMJContainerSecurityGroupOut       
-  CMJLoadBalancerDNSNameOutputs:
-    Description: Load balance endpoint
-    Value: !GetAtt CMJLoadBalancer.DNSName 
-    Export:
-      Name:  !Join  ['', [!Ref CMJServiceName, LoadBalancer,'Out']]   
+#Outputs:
+#  CMJECSClusterOutputs:
+#    Description: Cluster ecs/fargate
+#    Value: !Ref CMJECSCluster
+#    Export:
+#      Name: !Join  ['', [!Ref CMJClusterName, ECSCluster,'Out']]    
+#  CMJECSIamRoleEcsTasksOutputs:
+#    Description: IamRole task ecs/fargate
+#    Value: !Ref CMJECSIamRoleEcsTasks
+#    Export:
+#      Name: !Join  ['', [!Ref CMJClusterName, ECSIamRoleEcsTasks,'Out']]   
+#  CMJECSIamRoleEcsTasksExecutionOutputs:
+#    Description: IamRole tasks execution ecs/fargate
+#    Value: !Ref CMJECSIamRoleEcsTasksExecution
+#    Export:
+#      Name: !Join  ['', [!Ref CMJClusterName, ECSIamRoleEcsTasksExecution,'Out']] 
+#  CMJLoadBalancerOutputs:
+#    Description: Load balance to use
+#    Value: !Ref CMJLoadBalancer
+#    Export:
+#      Name: !Join ['', [!Ref CMJServiceName, LoadBalancer,'Out']]  
+#  CMJLoadBalancerDNSNameOutputs:
+#    Description: Load balance endpoint
+#    Value: !GetAtt CMJLoadBalancer.DNSName 
+#    Export:
+#      Name:   !Join ['', [!Ref CMJServiceName, LoadBalancerDNSName,'Out']]          
+#  CMJContainerSecurityGroupOutputs:
+#    Description: Security group do ECS container
+#    Value: !Ref CMJContainerSecurityGroup
+#    Export:
+#      Name: !Join ['', [!Ref CMJServiceName, ContainerSecurityGroup,'Out']] 
+             
+
 
 
       
