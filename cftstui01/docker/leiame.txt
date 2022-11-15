@@ -34,6 +34,9 @@
 
   docker image push nandolrs/cftstui-image-v1r1
 
+    acessar docker hub = https://hub.docker.com/r/nandolrs/cftstui-image-v1r1
+
+
 
 
 
