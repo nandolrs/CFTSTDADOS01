@@ -187,6 +187,8 @@ Resources:
           Value: 60 # padrao e 300
       TargetType: ip
       VpcId: !Ref CMJVpcId
+    DependsOn:
+      - CMJLoadBalancer                 
   CMJTargetGroupHTTP1:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -203,7 +205,9 @@ Resources:
         - Key: deregistration_delay.timeout_seconds
           Value: 60 # padrao e 300
       TargetType: ip
-      VpcId: !Ref CMJVpcId        
+      VpcId: !Ref CMJVpcId
+    DependsOn:
+      - CMJLoadBalancer           
   CMJListenerHTTP:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Condition:  CMJCertificateUsageQuestionNoCondition
