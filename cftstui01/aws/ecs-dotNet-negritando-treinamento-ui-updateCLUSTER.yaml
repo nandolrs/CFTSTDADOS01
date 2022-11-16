@@ -280,6 +280,8 @@ Resources:
                 Value: 1
       ListenerArn: !Ref CMJListenerHTTP
       Priority: 1      
+          DependsOn:
+      - CMJListenerHTTP   
   CMJListenerRuleHTTP1:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties: 
@@ -296,7 +298,9 @@ Resources:
               - Key: caminho
                 Value: 2
       ListenerArn: !Ref CMJListenerHTTP
-      Priority: 2      
+      Priority: 2  
+    DependsOn:
+      - CMJListenerHTTP              
   CMJECSTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
@@ -327,7 +331,9 @@ Resources:
             - Name: CMJ_VERSAO
               Value : v1r-1UM                            
             - Name: ECS_CONTAINER_STOP_TIMEOUT
-              Value : 120s                   
+              Value : 120s        
+    DependsOn:
+      - CMJECSCluster                         
   CMJECSTaskDefinition1:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
@@ -358,7 +364,9 @@ Resources:
             - Name: CMJ_VERSAO
               Value : v1r-2DOIS    
             - Name: ECS_CONTAINER_STOP_TIMEOUT
-              Value : 120s                                           
+              Value : 120s    
+    DependsOn:
+      - CMJECSCluster                                                     
   CMJECSServiceHTTP:
     Type: 'AWS::ECS::Service'
     Properties:
@@ -385,7 +393,7 @@ Resources:
           TargetGroupArn: !Ref CMJTargetGroupHTTP            
     DependsOn:
       - CMJListenerHTTP
-      - CMJTargetGroupHTTP  
+      - CMJListenerRuleHTTP      
   CMJECSServiceHTTP1:             # <?> ta dando erro aleatorio aqui
     Type: 'AWS::ECS::Service'
     Properties:
@@ -412,7 +420,7 @@ Resources:
           TargetGroupArn: !Ref CMJTargetGroupHTTP1            
     DependsOn:
       - CMJListenerHTTP           
-      - CMJTargetGroupHTTP1  
+      - CMJListenerRuleHTTP1      
   CMJScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties: 

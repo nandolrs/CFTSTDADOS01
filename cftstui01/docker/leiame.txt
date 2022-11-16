@@ -1,6 +1,6 @@
 - Gerar imagem UI
 
-  docker build -f ..\Dockerfile -t cftstui-image ..\build\.
+  docker build -f ..\Dockerfile -t cftstui-image ..\.
   
   docker images
 		
@@ -11,3 +11,11 @@
   acessar via navegador (chrome, edge, ...) = http://localhost:8000
 
   resposta = tela de pesquisa da aplicação
+
+  - Publicar no Docker
+
+  docker tag cftstui-image nandolrs/cftstui-image
+
+  docker image push nandolrs/cftstui-image
+
+  acessar via navegador (chrome, edge, ..._ = https://hub.docker.com/repository/docker/nandolrs/cftstui-image
