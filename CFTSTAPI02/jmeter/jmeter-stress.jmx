@@ -16,7 +16,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="aws-url" elementType="Argument">
             <stringProp name="Argument.name">aws-url</stringProp>
-            <stringProp name="Argument.value">negritandoapiloadbalancer-63231391.sa-east-1.elb.amazonaws.com</stringProp>
+            <stringProp name="Argument.value">negritandoapiloadbalancer-1735906412.sa-east-1.elb.amazonaws.com</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="local-url" elementType="Argument">
