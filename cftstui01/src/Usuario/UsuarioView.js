@@ -7,10 +7,13 @@ import UsuarioForm from './UsuarioForm';
 //import UsuarioAnonimoForm from './UsuarioAnonimoForm';
 import SisMensagemView from '../SisPadrao/SisMensagemView';
 import SisManterView from '../SisPadrao/SisManterView';
+import Config from "../config.json";
 
-
+const environment = Config.ENV;
+const baseUrl = Config.BASE_URL;
 class UsuarioView extends React.Component
 {
+
     constructor(props)
     {     
 
@@ -24,6 +27,8 @@ class UsuarioView extends React.Component
                ,salvar:process.env.REACT_APP_SERVER_URL + "/api/usuarios/"
                ,consultar:process.env.REACT_APP_SERVER_URL + "/api/usuarios/"
                ,excluir:process.env.REACT_APP_SERVER_URL + "/api/usuarios/excluir/"
+               ,pesquisar1:Config.BASE_URL + "/api/usuarios/pesquisar/"
+
            }
         };
     }
@@ -80,6 +85,8 @@ class UsuarioView extends React.Component
                     listaAutorizacao={this.props.listaAutorizacao}
                     objetoAutorizacao="Usuario"
                     visao={this.props.visao}
+                    url={this.state.url}
+                    environment={this.props.environment}
                     OnIncluir={() => this.Incluir() }
                     OnPesquisar={(entidade) => this.setState({visao:"manter.pesquisar",entidade:entidade})}
                 /> : ""

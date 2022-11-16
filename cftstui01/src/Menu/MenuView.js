@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import UsuarioContaView from '../Usuario/UsuarioContaView';
+//import UsuarioContaView from '../Usuario/UsuarioContaView';
 
 class MenuView extends React.Component
 {
@@ -64,11 +64,7 @@ render()
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
 
-        {/* conta  */}
 
-        <UsuarioContaView 
-          OnSair={()=> this.Sair()}
-        />
 
         {/* cadastros */}
 

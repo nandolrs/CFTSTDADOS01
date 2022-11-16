@@ -41,7 +41,9 @@ class UsuarioPesquisa extends React.Component
         return(
 <div class="card">
   <div class="card-header">
-      P E S Q U I S A R
+      P E S Q U I S A R 
+      <p/> 1={this.props.url.pesquisar1} 
+      <p/> 2={this.props.url.pesquisar}
   </div>
   <div class="card-body">
 

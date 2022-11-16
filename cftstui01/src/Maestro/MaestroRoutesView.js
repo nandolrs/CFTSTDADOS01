@@ -37,11 +37,11 @@ import MenuView from '../Menu/MenuView';
 //import TradutorView from '../Tradutor/TradutorView';
 //import UnidadeMedidaView from '../UnidadeMedida/UnidadeMedidaView';
 import UsuarioView from '../Usuario/UsuarioView';
-import UsuarioAutenticarView from '../Usuario/UsuarioAutenticarView';
-import UsuarioAutenticadorView from '../Usuario/UsuarioAutenticadorView';
-import UsuarioSenhaResetarView from '../Usuario/UsuarioSenhaResetarView';
-import UsuarioSenhaResetarAlterarView from '../Usuario/UsuarioSenhaResetarAlterarView';
-import UsuarioConviteView from '../Usuario/UsuarioConviteView';
+//import UsuarioAutenticarView from '../Usuario/UsuarioAutenticarView';
+//import UsuarioAutenticadorView from '../Usuario/UsuarioAutenticadorView';
+//import UsuarioSenhaResetarView from '../Usuario/UsuarioSenhaResetarView';
+//import UsuarioSenhaResetarAlterarView from '../Usuario/UsuarioSenhaResetarAlterarView';
+//import UsuarioConviteView from '../Usuario/UsuarioConviteView';
 //import Institucional from '../Institucional/Institucional';
 //import AutenticadorView from '../Autenticador/AutenticadorView';
 

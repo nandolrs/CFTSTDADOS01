@@ -6,7 +6,7 @@
 
   docker build -f ..\Dockerfile -t cftstui-image ..\build\.
   
-  docker build -f ..\Dockerfile   --build-arg REACT_APP_SERVER_URL=   -t cftstui-image-env  ..\build\.
+  docker build -f ..\Dockerfile   --build-arg REACT_APP_SERVER_URL=http://host/caminho   -t cftstui-image  ..\build\.
 
   docker images
 		
@@ -14,7 +14,7 @@
 		
   docker run -it --rm -p 8000:80 --name cftstui-service cftstui-image
 
-  docker run -it --rm -p 8000:80 --env REACT_APP_SERVER_URL=http://negritandoapiloadbalancer-1427225091.sa-east-1.elb.amazonaws.com     --name cftstui-service-env cftstui-image-env
+  docker run -it --rm -p 8000:80 --env REACT_APP_SERVER_URL=http://host/caminho1     --name cftstui-service-env cftstui-image
 
   acessar via navegador (chrome, edge, ...) = http://localhost:8000
 
@@ -34,10 +34,34 @@
 
   docker image push nandolrs/cftstui-image-v1r1
 
-    acessar docker hub = https://hub.docker.com/r/nandolrs/cftstui-image-v1r1
+  acessar docker hub = https://hub.docker.com/r/nandolrs/cftstui-image-v1r1
+
+
+-- node:14 AS build ;  node:13.12.0-alpine as build
+
+  docker build -f Dockerfile -t cftstui-image .
+
+  docker run -it --rm -p 8000:3000 --name cftstui-service cftstui-image
+
+  docker run -it --rm -p 8000:3000 --env REACT_APP_SERVER_URL=http://host/caminho1     --name cftstui-service cftstui-image
+
+  http://localhost:8000
+
+
+--  node:13.12.0-alpine as build
+
+  docker build -f ..\Dockerfile -t cftstui-image ..\.
+
+    docker build -f ..\Dockerfile   --build-arg REACT_APP_SERVER_URL=http://host/caminho   -t cftstui-image  ..\.
 
 
 
+  docker run -it --rm -p 8000:80 --name cftstui-service cftstui-image
 
+  docker run -it --rm -p 8000:80 --env REACT_APP_SERVER_URL=http://host/caminho1     --name cftstui-service cftstui-image
 
+  docker run -it --rm -p 8000:80 --env API_URL=http://host/caminho1     --name cftstui-service cftstui-image
 
+  docker run -it --rm -p 8000:80 --env BASE_URL=http://host/caminho1     --name cftstui-service cftstui-image
+
+  http://localhost:8000

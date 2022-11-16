@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import FormBotoes from '../SisPadrao/FormBotoes'
-import UsuarioArquivoView from '../Usuario/UsuarioArquivoView';
+//import UsuarioArquivoView from '../Usuario/UsuarioArquivoView';
 
 class UsuarioForm extends React.Component
 {
@@ -135,17 +135,7 @@ class UsuarioForm extends React.Component
                 
             }
 
-            {this.state.visao_detalhe=="UsuarioArquivo.manter.pesquisar" ?
-                <UsuarioArquivoView 
-                    autenticado = {this.state.autenticado}
-                    entidadePai={this.state.entidadePai}
-                    listaAutorizacao={this.props.listaAutorizacao}
-                    objetoAutorizacao="UsuarioSisArquivo"
-                    visao = {"manter.pesquisar"} 
-
-                />
-            : "" 
-            }
+  
 
         </div>
             
