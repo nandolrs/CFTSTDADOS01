@@ -280,7 +280,7 @@ Resources:
                 Value: 1
       ListenerArn: !Ref CMJListenerHTTP
       Priority: 1      
-          DependsOn:
+    DependsOn:
       - CMJListenerHTTP   
   CMJListenerRuleHTTP1:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -331,9 +331,7 @@ Resources:
             - Name: CMJ_VERSAO
               Value : v1r-1UM                            
             - Name: ECS_CONTAINER_STOP_TIMEOUT
-              Value : 120s        
-    DependsOn:
-      - CMJECSCluster                         
+              Value : 120s                                
   CMJECSTaskDefinition1:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
@@ -364,9 +362,7 @@ Resources:
             - Name: CMJ_VERSAO
               Value : v1r-2DOIS    
             - Name: ECS_CONTAINER_STOP_TIMEOUT
-              Value : 120s    
-    DependsOn:
-      - CMJECSCluster                                                     
+              Value : 120s                                                       
   CMJECSServiceHTTP:
     Type: 'AWS::ECS::Service'
     Properties:

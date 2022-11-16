@@ -236,7 +236,9 @@ Resources:
               - Key: caminho
                 Value: 1
       ListenerArn: !Ref CMJListenerHTTP
-      Priority: 1      
+      Priority: 1     
+    DependsOn:
+      - CMJListenerHTTP          
   CMJListenerRuleHTTP1:
     Type: AWS::ElasticLoadBalancingV2::ListenerRule
     Properties: 
@@ -253,7 +255,9 @@ Resources:
               - Key: caminho
                 Value: 2
       ListenerArn: !Ref CMJListenerHTTP
-      Priority: 2      
+      Priority: 2  
+    DependsOn:
+      - CMJListenerHTTP            
   CMJECSTaskDefinition:
     Type: 'AWS::ECS::TaskDefinition'
     Properties:
@@ -345,9 +349,8 @@ Resources:
           ContainerPort: !Ref CMJContainerPort
           TargetGroupArn: !Ref CMJTargetGroupHTTP            
     DependsOn:
-      - CMJECSCluster    
       - CMJListenerHTTP
-      - CMJTargetGroupHTTP  
+      - CMJListenerRuleHTTP      
   CMJECSServiceHTTP1:             # <?> ta dando erro aleatorio aqui
     Type: 'AWS::ECS::Service'
     Properties:
@@ -373,9 +376,8 @@ Resources:
           ContainerPort: !Ref CMJContainerPort
           TargetGroupArn: !Ref CMJTargetGroupHTTP1            
     DependsOn:
-      - CMJECSCluster    
       - CMJListenerHTTP           
-      - CMJTargetGroupHTTP1  
+      - CMJListenerRuleHTTP1      
   CMJScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
     Properties: 
