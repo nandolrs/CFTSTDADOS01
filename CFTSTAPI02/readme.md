@@ -59,7 +59,7 @@ Os fontes desta implementação você encontra no [github](https://github.com/na
 
 ## Implementando e testando a API
 
-Tudo foi exposto como API (Application Programming Interface) utilizando o MVC, JSON e REST. Conforme especificado acima existe um endpoint '/api' sob o verbo GET que será utilizado para determinar a saúde da API respondendo com o código 200 e a literal 'eu estou vivo'. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI01). 
+Tudo foi exposto como API (Application Programming Interface) utilizando o MVC, JSON e REST. Conforme especificado acima existe um endpoint '/api' sob o verbo GET que será utilizado para determinar a saúde da API respondendo com o código 200 e a literal 'eu estou vivo'. Os fontes desta implementação você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/tree/master/CFTSTAPI02). 
 
 
 <img width="442" alt="f57-ide-visualstudio2022-testeEuEstouVivo" src="https://user-images.githubusercontent.com/34346597/192416823-39af97b6-7b01-4445-8d6c-fd9176bdf9f5.png">
@@ -70,15 +70,15 @@ Tudo foi exposto como API (Application Programming Interface) utilizando o MVC, 
 Depois de implementar os projetos  precisamos empacotar tudo para serem distribuídos como uma solução única. Se montarmos uma árvore de dependência ela ficaria assim:
 
 ```
-CFTSTAPI01 => CFTSTREGRAS01 => CFTSTDADOS01
+CFTSTAPI02 => CFTSTREGRAS01 => CFTSTDADOS01
 ```
 
-Devemos ler da seguinte forma: CFTSTAPI01 {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
+Devemos ler da seguinte forma: CFTSTAPI02 {depende de} CFTSTREGRAS01  {depende de} CFTSTDADOS01.
 
 
 Depois de implementado e testado é aqui que entra o container. Vamos gerar e subir a imagem desta camada utilizando o [Docker desktop](https://www.docker.com/). Eu to usando como IDE o Visual Studio 2022 que vem com ferramentas pra facilitar o uso de Docker. Mas vamos utilizar o _CLI_ (Command Line Interface) do _**Docker desktop**_ que você deve baixar e instalar.
 
-O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Em resumo no Dockerfile você encontra instruções que vão: copiar e compilar os fontes necessários. Aqui em baixo coloquei conteúdo do arquivo Dockerfile utilizado. O arquivo você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI01/Dockerfile).
+O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Em resumo no Dockerfile você encontra instruções que vão: copiar e compilar os fontes necessários. Aqui em baixo coloquei conteúdo do arquivo Dockerfile utilizado. O arquivo você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI02/Dockerfile).
 
 
 ```
@@ -92,19 +92,19 @@ WORKDIR /app
 
 # copy csproj and restore as distinct layers
 COPY *.sln .
-COPY CFTSTAPI01/*.csproj					       ./CFTSTAPI01/        
+COPY CFTSTAPI02/*.csproj					       ./CFTSTAPI02/        
 COPY CFTSTREGRAS01/*.csproj      			   ./CFTSTREGRAS01/      
 COPY CFTSTDADOS01/*.csproj  				   ./CFTSTDADOS01/  
 
 RUN dotnet restore
 
 # copy everything else and build app
-COPY CFTSTAPI01/.					       ./CFTSTAPI01/        
+COPY CFTSTAPI02/.					       ./CFTSTAPI02/        
 COPY CFTSTREGRAS01/.      			   ./CFTSTREGRAS01/      
 COPY CFTSTDADOS01/.  				   ./CFTSTDADOS01/  
 
-WORKDIR /app/CFTSTAPI01
-RUN dotnet publish CFTSTAPI01.csproj -c Release -o out /restore
+WORKDIR /app/CFTSTAPI02
+RUN dotnet publish CFTSTAPI02.csproj -c Release -o out /restore
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
 
@@ -252,7 +252,7 @@ Abaixo deixei um fragmento do templace CloudFormation com alguns recursos.
 ```
 
 ## Provisionando Container Docker (ECS)
-Vou acessar o serviço de CloudFormation e utilizar um template que eu criei. Você encontra o template no [git](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI01/aws/ecs-dotNet-negritando-treinamento.yaml).
+Vou acessar o serviço de CloudFormation e utilizar um template que eu criei. Você encontra o template no [git](https://github.com/nandolrs/CFTSTDADOS01/blob/master/CFTSTAPI02/aws/ecs-dotNet-negritando-treinamento.yaml).
 
 <img width="550" alt="f44-cloudformation-ecs-script" src="https://user-images.githubusercontent.com/34346597/192105228-44bad5c6-b48b-42af-b906-8fe78728876a.png">
 
