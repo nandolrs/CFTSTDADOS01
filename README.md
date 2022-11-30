@@ -16,7 +16,7 @@ Vamos implantar uma base de dados **MySQL** utilizando o console do **AWS RDS** 
 
 Implantaremos uma **API Rest** implementada em **.Net Core** e empacotada em um contaiter Docker pronta pra navegar utilizando **AWS ECS + Fargate**.
 
-# [Implantando uma solução utilizando Cloud e Container ( AWS + Docker ) (Parte 3 de 3, user interface tier)] (https://github.com/nandolrs/CFTSTDADOS01/tree/master/cftstui01)
+# [Implantando uma solução utilizando Cloud e Container ( AWS + Docker ) (Parte 3 de 3, user interface tier)](https://github.com/nandolrs/CFTSTDADOS01/tree/master/cftstui01)
 
 <img width="89" alt="f24-docker-logo" src="https://user-images.githubusercontent.com/34346597/186164024-946acca3-0736-4f47-b33d-686b455617fe.png">
 
