@@ -28,3 +28,7 @@
   </li>
 
 </ul>
+
+![f28-pesquisa](https://user-images.githubusercontent.com/34346597/204917405-942e69a5-9250-4e52-9230-22a8b1c17478.png)
+![f29-lista](https://user-images.githubusercontent.com/34346597/204917410-1db54d1e-223e-4eb6-a57c-71de9d891690.png)
+![f27-clone](https://user-images.githubusercontent.com/34346597/204917414-8b2699f0-378f-4ba9-beef-8c3a14492b0c.png)
