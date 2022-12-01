@@ -40,3 +40,29 @@ Após clonar o projeto geramos a imagem Docker e implantamos a solução na clou
 
 ![f29-lista](https://user-images.githubusercontent.com/34346597/204917410-1db54d1e-223e-4eb6-a57c-71de9d891690.png)
 
+## Empacotando tudo utilizando container
+
+Depois de implementar e testar o projeto  precisamos empacotar tudo para ser distribuído como uma solução. Isto já foi detalhado anteriormente. O que muda é basicamente são os arquivos fontes e o arquivo Dockerfile.
+
+O projeto precisa de um arquivo Dockerfile com a imagem adequada citando os projetos necessários. Em resumo no Dockerfile você encontra instruções que vão: copiar e compilar os fontes necessários. Aqui em baixo coloquei conteúdo do arquivo Dockerfile utilizado. O arquivo você encontra no [github](https://github.com/nandolrs/CFTSTDADOS01/blob/master/cftstui01/Dockerfile).
+
+```
+# build environment
+FROM node:13.12.0-alpine as build
+WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm ci --silent
+RUN npm install react-scripts@3.4.1 -g --silent
+COPY . ./
+RUN npm run build
+
+# production environment
+FROM nginx:stable-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+Depois disto é usar os comandos docker build/tag/push e bla-bla-bla. Tudo já foi descrito no projeto anterior.
